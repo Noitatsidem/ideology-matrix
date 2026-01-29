@@ -860,8 +860,14 @@ div.pluralist .text-wrapper {
 .arrow {
     width: 60%;
     height: auto;
-    color: var(--text-secondary);
-    transition: color var(--transition-normal);
+    /* Light mode: keep dark arrows as-is */
+    filter: none;
+    transition: filter var(--transition-normal);
+}
+
+/* Dark mode: invert and adjust brightness for light arrows */
+[data-theme="dark"] .arrow {
+    filter: invert(1) brightness(0.9);
 }
 
 /* ========================================
