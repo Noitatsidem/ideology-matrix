@@ -1,233 +1,1877 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:400,700" rel="stylesheet">
 <link href='style.css' rel='stylesheet' type='text/css'>
-<title>8values Results</title>
-<link rel="icon" type="x-icon" href="icon.png">
-<link rel="shortcut icon" type="x-icon" href="icon.png">
+<title>Ideology Matrix Results</title>
+<link rel="icon" type="image/x-icon" href="icon.png">
+<link rel="shortcut icon" type="image/x-icon" href="icon.png">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="theme.js"></script>
+<script type="application/javascript" src="ideologies.js"></script>
 <script>
-  version = "Test Edition #1" //Remember to update this before making changes to the test itself!
+  version = "Ideology Matrix v2.0"
 </script>
 </head>
-<script type="application/javascript"
-        src="ideologies.js">
-</script>
 
 <body>
-<h1>8values</h1>
-<hr>
+<a href="#results-heading" class="skip-link">Skip to results</a>
+<header role="banner">
+    <h1>Ideology Matrix</h1>
+    <hr>
+</header>
 
-<h1>Results</h1>
+<main role="main">
+<h1 id="results-heading">Results</h1>
 
-<h2>Economic Axis: <span class="weight-300" id="economic-label"></span></h2>
-<div class="axis">
-    <img id="img-equality" src="value_images/equality.svg" height="128pt"/>
-    <div class="bar equality" id="bar-equality"><div class="text-wrapper" id="equality"></div></div>
-    <div class="bar wealth" id="bar-wealth"><div class="text-wrapper" id="wealth"></div></div>
-    <img id="img-wealth" src="value_images/markets.svg" height="128pt"/>
+<!-- Consistency Display -->
+<p class="consistency-display" aria-live="polite">
+    Response Consistency: <span id="consistency-value"></span>
+    <span id="consistency-badge" class="consistency-badge" role="status"></span>
+    <span id="refined-badge" class="refined-badge hidden" role="status">Refined</span>
+</p>
+
+<!-- Refinement Info (shown if follow-up questions were answered) -->
+<div id="refinement-info" class="refinement-info" style="display: none;" role="region" aria-label="Refinement information">
+    <h3>Results Refined with Follow-up Questions</h3>
+    <p>Your placement was refined with 10 targeted questions focusing on axes where your closest ideological matches differ most:</p>
+    <p id="targeted-axes-display"></p>
 </div>
-<h2>Diplomatic Axis: <span class="weight-300" id="diplomatic-label"></span></h2>
-<div class="axis">
-    <img id="img-might" src="value_images/nation.svg" height="128pt"/>
-    <div class="bar might" id="bar-might"><div class="text-wrapper" id="might"></div></div>
-    <div class="bar peace" id="bar-peace"><div class="text-wrapper" id="peace"></div></div>
-    <img id="img-peace" src="value_images/globe.svg" height="128pt"/>
+
+<!-- Mechanism/Approach Preferences (shown if adaptive quiz with mechanism questions) -->
+<div id="mechanism-section" class="mechanism-section" style="display: none;" role="region" aria-label="Your political approach preferences">
+    <h3>Your Approach &amp; Methods</h3>
+    <p>Beyond <em>what</em> you believe, here's <em>how</em> you'd prefer to achieve your political goals:</p>
+    <div id="mechanism-tags" class="mechanism-tags"></div>
+    <p class="quiz-stats" id="quiz-stats"></p>
 </div>
-<h2>Civil Axis: <span class="weight-300" id="state-label"></span></h2>
-<div class="axis">
-    <img id="img-liberty" src="value_images/liberty.svg" height="128pt"/>
-    <div class="bar liberty" id="bar-liberty"><div class="text-wrapper" id="liberty"></div></div>
-    <div class="bar authority" id="bar-authority"><div class="text-wrapper" id="authority"></div></div>
-    <img id="img-authority" src="value_images/authority.svg" height="128pt"/>
+
+<!-- Axis Interpretation Guide -->
+<div id="axis-guide" class="axis-guide" role="region" aria-label="How to read your results">
+    <h3>Understanding Your Results</h3>
+    <p>Each bar shows where you fall between two opposing views. The percentage indicates how strongly you lean toward each side.</p>
+    <details>
+        <summary>Click to see what each axis measures</summary>
+        <div class="axis-explanations">
+            <p><strong>Equality:</strong> Do you prefer free markets with minimal interference, or active government efforts to reduce economic inequality?</p>
+            <p><strong>Liberty:</strong> How much power should the state have over individuals? More authority for order and safety, or more personal freedom?</p>
+            <p><strong>Progress:</strong> Do you value traditional customs and institutions, or embrace social change and modern values?</p>
+            <p><strong>Identity:</strong> Do you prioritize your nation's interests and borders, or see yourself as a global citizen?</p>
+            <p><strong>Populism:</strong> Do you trust experts and institutions to make decisions, or believe ordinary people should have more direct power?</p>
+            <p><strong>Intervention:</strong> Should your country focus on domestic issues, or actively engage in foreign affairs and military action?</p>
+            <p><strong>Ecology:</strong> Should human needs come first, or does nature have value beyond what it provides to people?</p>
+            <p><strong>Power:</strong> Should authority be centralized for efficiency, or spread out among local communities?</p>
+            <p><strong>Change:</strong> Should society change slowly and carefully, or are rapid or dramatic changes sometimes needed?</p>
+            <p><strong>Human Nature:</strong> Are people fundamentally fixed in their nature, or can education and good institutions improve us?</p>
+            <p><strong>Means:</strong> Is achieving results worth compromising your values, or should principles always come first?</p>
+            <p><strong>Property:</strong> Should property be privately owned, or should communities share ownership of key resources?</p>
+            <p><strong>Secularism:</strong> Should religion influence public life and policy, or should government be strictly secular?</p>
+            <p><strong>Technology:</strong> Are you cautious about new technologies, or optimistic about their potential to solve problems?</p>
+            <p><strong>Welfare:</strong> Should government help only those who qualify, or provide universal benefits to everyone?</p>
+            <p><strong>Integration:</strong> Should newcomers adopt the majority culture, or should society celebrate diverse cultural identities?</p>
+        </div>
+    </details>
 </div>
-<h2>Societal Axis: <span class="weight-300" id="society-label"></span></h2>
-<div class="axis">
-    <img id="img-tradition" src="value_images/tradition.svg" height="128pt"/>
-    <div class="bar tradition" id="bar-tradition"><div class="text-wrapper" id="tradition"></div></div>
-    <div class="bar progress" id="bar-progress"><div class="text-wrapper" id="progress"></div></div>
-    <img id="img-progress" src="value_images/progress.svg" height="128pt"/>
+
+<!-- Original 8 Axes -->
+<section aria-label="Political value axes results">
+
+<!-- Axis 1: Equality -->
+<h2 id="axis-equality">Equality: <span class="weight-300" id="equality-label"></span></h2>
+<p class="axis-description">Free Market ↔ Economic Equality</p>
+<div class="axis-container">
+    <img src="icons/market.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-equality" aria-describedby="equality-desc">
+        <div class="bar market" id="bar-market"><div class="text-wrapper" id="market"></div></div>
+        <div class="bar equality" id="bar-equality"><div class="text-wrapper" id="equality"></div></div>
+    </div>
+    <img src="icons/equality.svg" class="axis-icon" alt="">
 </div>
-<h2>Closest Match: <span class="weight-300" id="ideology-label"></span></h2>
-<p>Ideological matching is a work in progress, and is much less accurate than the values and axes.</p>
-<p>You can send these results by copying and pasting the URL at the top of the page or using the image below. Think your matched ideology was wrong? Want to help us calibrate the test? Send the results along with your political ideology to us at eightvalues@gmail.com, or send us any comments, questions, or criticism. </p>
+<span id="equality-desc" class="visually-hidden"></span>
+
+<!-- Axis 2: Liberty -->
+<h2 id="axis-liberty">Liberty: <span class="weight-300" id="liberty-label"></span></h2>
+<p class="axis-description">State Authority ↔ Civil Liberty</p>
+<div class="axis-container">
+    <img src="icons/authority.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-liberty" aria-describedby="liberty-desc">
+        <div class="bar authority" id="bar-authority"><div class="text-wrapper" id="authority"></div></div>
+        <div class="bar liberty" id="bar-liberty"><div class="text-wrapper" id="liberty"></div></div>
+    </div>
+    <img src="icons/liberty.svg" class="axis-icon" alt="">
+</div>
+<span id="liberty-desc" class="visually-hidden"></span>
+
+<!-- Axis 3: Progress -->
+<h2 id="axis-progress">Progress: <span class="weight-300" id="progress-label"></span></h2>
+<p class="axis-description">Traditional ↔ Secular-Progressive</p>
+<div class="axis-container">
+    <img src="icons/tradition.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-progress" aria-describedby="progress-desc">
+        <div class="bar tradition" id="bar-tradition"><div class="text-wrapper" id="tradition"></div></div>
+        <div class="bar progress" id="bar-progress"><div class="text-wrapper" id="progress"></div></div>
+    </div>
+    <img src="icons/progress.svg" class="axis-icon" alt="">
+</div>
+<span id="progress-desc" class="visually-hidden"></span>
+
+<!-- Axis 4: Identity -->
+<h2 id="axis-identity">Identity: <span class="weight-300" id="identity-label"></span></h2>
+<p class="axis-description">Nationalist ↔ Cosmopolitan</p>
+<div class="axis-container">
+    <img src="icons/nation.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-identity" aria-describedby="identity-desc">
+        <div class="bar nation" id="bar-nation"><div class="text-wrapper" id="nation"></div></div>
+        <div class="bar globe" id="bar-globe"><div class="text-wrapper" id="globe"></div></div>
+    </div>
+    <img src="icons/globe.svg" class="axis-icon" alt="">
+</div>
+<span id="identity-desc" class="visually-hidden"></span>
+
+<!-- Axis 5: Populism -->
+<h2 id="axis-populism">Populism: <span class="weight-300" id="populism-label"></span></h2>
+<p class="axis-description">Pluralist/Elite ↔ Populist/People</p>
+<div class="axis-container">
+    <img src="icons/elite.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-populism" aria-describedby="populism-desc">
+        <div class="bar elite" id="bar-elite"><div class="text-wrapper" id="elite"></div></div>
+        <div class="bar populist" id="bar-populist"><div class="text-wrapper" id="populist"></div></div>
+    </div>
+    <img src="icons/populist.svg" class="axis-icon" alt="">
+</div>
+<span id="populism-desc" class="visually-hidden"></span>
+
+<!-- Axis 6: Intervention -->
+<h2 id="axis-intervention">Intervention: <span class="weight-300" id="intervention-label"></span></h2>
+<p class="axis-description">Non-interventionist ↔ Interventionist</p>
+<div class="axis-container">
+    <img src="icons/dove.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-intervention" aria-describedby="intervention-desc">
+        <div class="bar dove" id="bar-dove"><div class="text-wrapper" id="dove"></div></div>
+        <div class="bar hawk" id="bar-hawk"><div class="text-wrapper" id="hawk"></div></div>
+    </div>
+    <img src="icons/hawk.svg" class="axis-icon" alt="">
+</div>
+<span id="intervention-desc" class="visually-hidden"></span>
+
+<!-- Axis 7: Ecology -->
+<h2 id="axis-ecology">Ecology: <span class="weight-300" id="ecology-label"></span></h2>
+<p class="axis-description">Human-Centered ↔ Nature-Centered</p>
+<div class="axis-container">
+    <img src="icons/anthropo.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-ecology" aria-describedby="ecology-desc">
+        <div class="bar anthropo" id="bar-anthropo"><div class="text-wrapper" id="anthropo"></div></div>
+        <div class="bar eco" id="bar-eco"><div class="text-wrapper" id="eco"></div></div>
+    </div>
+    <img src="icons/eco.svg" class="axis-icon" alt="">
+</div>
+<span id="ecology-desc" class="visually-hidden"></span>
+
+<!-- Axis 8: Power -->
+<h2 id="axis-power">Power: <span class="weight-300" id="power-label"></span></h2>
+<p class="axis-description">Concentrated ↔ Distributed</p>
+<div class="axis-container">
+    <img src="icons/central.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-power" aria-describedby="power-desc">
+        <div class="bar central" id="bar-central"><div class="text-wrapper" id="central"></div></div>
+        <div class="bar decentral" id="bar-decentral"><div class="text-wrapper" id="decentral"></div></div>
+    </div>
+    <img src="icons/decentral.svg" class="axis-icon" alt="">
+</div>
+<span id="power-desc" class="visually-hidden"></span>
+
+<!-- New 8 Axes -->
+
+<!-- Axis 9: Change -->
+<h2 id="axis-change">Change: <span class="weight-300" id="change-label"></span></h2>
+<p class="axis-description">Gradualist ↔ Revolutionary</p>
+<div class="axis-container">
+    <img src="icons/gradualist.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-change" aria-describedby="change-desc">
+        <div class="bar gradualist" id="bar-gradualist"><div class="text-wrapper" id="gradualist"></div></div>
+        <div class="bar revolutionary" id="bar-revolutionary"><div class="text-wrapper" id="revolutionary"></div></div>
+    </div>
+    <img src="icons/revolutionary.svg" class="axis-icon" alt="">
+</div>
+<span id="change-desc" class="visually-hidden"></span>
+
+<!-- Axis 10: Human Nature -->
+<h2 id="axis-nature">Human Nature: <span class="weight-300" id="nature-label"></span></h2>
+<p class="axis-description">Fixed Human Nature ↔ Improvable Human Nature</p>
+<div class="axis-container">
+    <img src="icons/constrained.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-nature" aria-describedby="nature-desc">
+        <div class="bar constrained" id="bar-constrained"><div class="text-wrapper" id="constrained"></div></div>
+        <div class="bar unconstrained" id="bar-unconstrained"><div class="text-wrapper" id="unconstrained"></div></div>
+    </div>
+    <img src="icons/unconstrained.svg" class="axis-icon" alt="">
+</div>
+<span id="nature-desc" class="visually-hidden"></span>
+
+<!-- Axis 11: Means -->
+<h2 id="axis-means">Means: <span class="weight-300" id="means-label"></span></h2>
+<p class="axis-description">Results-Focused ↔ Values-Focused</p>
+<div class="axis-container">
+    <img src="icons/pragmatic.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-means" aria-describedby="means-desc">
+        <div class="bar pragmatic" id="bar-pragmatic"><div class="text-wrapper" id="pragmatic"></div></div>
+        <div class="bar principled" id="bar-principled"><div class="text-wrapper" id="principled"></div></div>
+    </div>
+    <img src="icons/principled.svg" class="axis-icon" alt="">
+</div>
+<span id="means-desc" class="visually-hidden"></span>
+
+<!-- Axis 12: Property -->
+<h2 id="axis-property">Property: <span class="weight-300" id="property-label"></span></h2>
+<p class="axis-description">Private ↔ Commons</p>
+<div class="axis-container">
+    <img src="icons/private.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-property" aria-describedby="property-desc">
+        <div class="bar private" id="bar-private"><div class="text-wrapper" id="private"></div></div>
+        <div class="bar commons" id="bar-commons"><div class="text-wrapper" id="commons"></div></div>
+    </div>
+    <img src="icons/commons.svg" class="axis-icon" alt="">
+</div>
+<span id="property-desc" class="visually-hidden"></span>
+
+<!-- Axis 13: Secularism -->
+<h2 id="axis-secular">Secularism: <span class="weight-300" id="secular-label"></span></h2>
+<p class="axis-description">Religious ↔ Secular</p>
+<div class="axis-container">
+    <img src="icons/religious.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-secular" aria-describedby="secular-desc">
+        <div class="bar religious" id="bar-religious"><div class="text-wrapper" id="religious"></div></div>
+        <div class="bar secular" id="bar-secular"><div class="text-wrapper" id="secular"></div></div>
+    </div>
+    <img src="icons/secular.svg" class="axis-icon" alt="">
+</div>
+<span id="secular-desc" class="visually-hidden"></span>
+
+<!-- Axis 14: Technology -->
+<h2 id="axis-tech">Technology: <span class="weight-300" id="tech-label"></span></h2>
+<p class="axis-description">Skeptic ↔ Enthusiast</p>
+<div class="axis-container">
+    <img src="icons/techskeptic.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-tech" aria-describedby="tech-desc">
+        <div class="bar techskeptic" id="bar-techskeptic"><div class="text-wrapper" id="techskeptic"></div></div>
+        <div class="bar technophile" id="bar-technophile"><div class="text-wrapper" id="technophile"></div></div>
+    </div>
+    <img src="icons/technophile.svg" class="axis-icon" alt="">
+</div>
+<span id="tech-desc" class="visually-hidden"></span>
+
+<!-- Axis 15: Welfare -->
+<h2 id="axis-welfare">Welfare: <span class="weight-300" id="welfare-label"></span></h2>
+<p class="axis-description">Targeted ↔ Universal</p>
+<div class="axis-container">
+    <img src="icons/targeted.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-welfare" aria-describedby="welfare-desc">
+        <div class="bar targeted" id="bar-targeted"><div class="text-wrapper" id="targeted"></div></div>
+        <div class="bar universal" id="bar-universal"><div class="text-wrapper" id="universal"></div></div>
+    </div>
+    <img src="icons/universal.svg" class="axis-icon" alt="">
+</div>
+<span id="welfare-desc" class="visually-hidden"></span>
+
+<!-- Axis 16: Integration -->
+<h2 id="axis-integration">Integration: <span class="weight-300" id="integration-label"></span></h2>
+<p class="axis-description">Shared Culture ↔ Cultural Diversity</p>
+<div class="axis-container">
+    <img src="icons/assimilationist.svg" class="axis-icon" alt="">
+    <div class="axis" role="img" aria-labelledby="axis-integration" aria-describedby="integration-desc">
+        <div class="bar assimilationist" id="bar-assimilationist"><div class="text-wrapper" id="assimilationist"></div></div>
+        <div class="bar pluralist" id="bar-pluralist"><div class="text-wrapper" id="pluralist"></div></div>
+    </div>
+    <img src="icons/pluralist.svg" class="axis-icon" alt="">
+</div>
+<span id="integration-desc" class="visually-hidden"></span>
+</section>
+
+<section aria-label="Ideology matches">
+<h2 id="matches-heading">Your Closest Matches</h2>
+<p id="matching-explanation">Matching uses salience-weighted distance: axes that are more definitional to an ideology are weighted more heavily when calculating fit.</p>
+<div id="matches-container" role="list" aria-label="List of matching ideologies"></div>
+<p class="note-text">Note: Descriptions are simplified summaries. Real-world ideologies are more complex, historically contested, and often overlap. These matches suggest general alignment, not precise categorization.</p>
+</section>
+
+<section aria-label="Share results">
+<p>Share your results by copying the URL or using the image below.</p>
 <hr/>
-<img src="" id="banner">
-<button class="button" onclick="location.href='index.html';">Back</button> <br>
-<!-- Website visit statistics - no personal information is collected! -->
-<script type="text/javascript">
-var sc_project=11325211;
-var sc_invisible=1;
-var sc_security="fd9f0659";
-var scJsHost = (("https:" == document.location.protocol) ?
-"https://secure." : "http://www.");
-document.write("<sc"+"ript type='text/javascript' src='" +
-scJsHost+
-"statcounter.com/counter/counter.js'></"+"script>");
-</script>
-<noscript><div class="statcounter"><a title="web stats"
-href="http://statcounter.com/" target="_blank"><img
-class="statcounter"
-src="//c.statcounter.com/11325211/0/fd9f0659/1/" alt="web
-stats"></a></div></noscript>
+<img src="" id="banner" alt="Results summary image for sharing">
+<button class="button" onclick="location.href='index.html';" aria-label="Return to the homepage">Back</button> <br>
+</section>
+
+<footer role="contentinfo" class="results-page-footer">
+    <p>
+        Based on <a href="https://8values.github.io/" target="_blank" rel="noopener">8values</a> by the 8values team.
+        <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT License</a>.
+    </p>
+</footer>
+</main>
+
 <script>
-    function getQueryVariable(variable)
-    {
-           var query = window.location.search.substring(1)
-           var vars = query.split("&")
-           for (var i=0;i<vars.length;i++) {
-                   var pair = vars[i].split("=")
-                   if(pair[0] == variable) {return pair[1]}
-           }
-           return(NaN);
+    // 16 axes
+    const AXES = ['eqlt', 'lbrt', 'prog', 'idnt', 'popl', 'intv', 'ecol', 'powr',
+                  'chng', 'hmnn', 'mns', 'prty', 'scr', 'tech', 'wlfr', 'intg'];
+
+    function getQueryVariable(variable) {
+        const query = window.location.search.substring(1);
+        const vars = query.split("&");
+        for (let i = 0; i < vars.length; i++) {
+            const pair = vars[i].split("=");
+            if (pair[0] === variable) { return pair[1]; }
+        }
+        return null;
     }
 
     function setBarValue(name, value) {
-        innerel = document.getElementById(name)
-        outerel = document.getElementById("bar-" + name)
-        outerel.style.width = (value + "%")
-        innerel.innerHTML = (value + "%")
-        if (innerel.offsetWidth + 20 > outerel.offsetWidth) {
-            innerel.style.visibility = "hidden"
+        const innerel = document.getElementById(name);
+        const outerel = document.getElementById("bar-" + name);
+        if (!innerel || !outerel) {
+            console.warn('Missing element for axis:', name);
+            return;
+        }
+        outerel.style.width = (value + "%");
+        // Only show percentage if bar is wide enough (>15%)
+        if (value > 15) {
+            innerel.textContent = (value + "%");
+        } else {
+            innerel.textContent = "";
         }
     }
 
-    econArray = ["Communist","Socialist","Social","Centrist","Market","Capitalist","Laissez-Faire"]
-    diplArray = ["Cosmopolitan","Internationalist","Peaceful","Balanced","Patriotic","Nationalist","Chauvinist"]
-    govtArray = ["Anarchist","Libertarian","Liberal","Moderate","Statist","Authoritarian","Totalitarian"]
-    sctyArray = ["Revolutionary","Very Progressive","Progressive","Neutral","Traditional","Very Traditional","Reactionary"]
+    // Label arrays for each axis
+    const eqltArray = ["Laissez-Faire", "Capitalist", "Market", "Centrist", "Social", "Socialist", "Communist"];
+    const lbrtArray = ["Totalitarian", "Authoritarian", "Statist", "Moderate", "Liberal", "Libertarian", "Anarchist"];
+    const progArray = ["Reactionary", "Very Traditional", "Traditional", "Neutral", "Progressive", "Very Progressive", "Revolutionary"];
+    const idntArray = ["Chauvinist", "Nationalist", "Patriotic", "Balanced", "Internationalist", "Globalist", "Cosmopolitan"];
+    const poplArray = ["Elitist", "Technocratic", "Pluralist", "Moderate", "Populist-Leaning", "Populist", "Radical Populist"];
+    const intvArray = ["Isolationist", "Non-Interventionist", "Cautious", "Moderate", "Interventionist", "Hawkish", "Crusader"];
+    const ecolArray = ["Exploitative", "Anthropocentric", "Pragmatic", "Moderate", "Environmentalist", "Green", "Deep Ecologist"];
+    const powrArray = ["Totalitarian", "Centralist", "Unitary", "Moderate", "Federalist", "Decentralist", "Anarchist"];
+    // New axes labels
+    const chngArray = ["Ultra-Conservative", "Gradualist", "Cautious", "Moderate", "Reformist", "Radical", "Revolutionary"];
+    const hmnnArray = ["Hobbesian", "Pessimistic", "Constrained", "Neutral", "Optimistic", "Perfectionist", "Utopian"];
+    const mnsArray = ["Machiavellian", "Very Pragmatic", "Pragmatic", "Balanced", "Principled", "Idealist", "Absolutist"];
+    const prtyArray = ["Propertarian", "Privatist", "Market-Oriented", "Mixed", "Communalist", "Collectivist", "Full Commons"];
+    const scrArray = ["Theocratic", "Religious", "Faith-Influenced", "Neutral", "Secular-Leaning", "Secular", "Militant Secular"];
+    const techArray = ["Primitivist", "Tech-Skeptic", "Cautious", "Neutral", "Tech-Positive", "Techno-Optimist", "Transhumanist"];
+    const wlfrArray = ["Individualist", "Residualist", "Targeted", "Mixed", "Broad", "Universalist", "Full Universal"];
+    const intgArray = ["Assimilationist", "Integrationist", "Civic", "Balanced", "Multicultural", "Pluralist", "Pluralist"];
 
-    function setLabel(val,ary) {
-        if (val > 100) { return "" } else
-        if (val > 90) { return ary[0] } else
-        if (val > 75) { return ary[1] } else
-        if (val > 60) { return ary[2] } else
-        if (val >= 40) { return ary[3] } else
-        if (val >= 25) { return ary[4] } else
-        if (val >= 10) { return ary[5] } else
-        if (val >= 0) { return ary[6] } else
-        	{return ""}
+    function setLabel(val, ary) {
+        if (val > 100) { return ""; }
+        else if (val > 90) { return ary[6]; }
+        else if (val > 75) { return ary[5]; }
+        else if (val > 60) { return ary[4]; }
+        else if (val >= 40) { return ary[3]; }
+        else if (val >= 25) { return ary[2]; }
+        else if (val >= 10) { return ary[1]; }
+        else if (val >= 0) { return ary[0]; }
+        else { return ""; }
     }
 
-    equality  = getQueryVariable("e")
-    peace     = getQueryVariable("d")
-    liberty   = getQueryVariable("g")
-    progress  = getQueryVariable("s")
-    wealth    = (100 - equality).toFixed(1)
-    might     = (100 - peace   ).toFixed(1)
-    authority = (100 - liberty ).toFixed(1)
-    tradition = (100 - progress).toFixed(1)
+    /*
+     * Salience-Weighted Distance Matching
+     *
+     * For each ideology, we compute a weighted Euclidean distance where
+     * the weight for each axis comes from that ideology's salience values.
+     * This means ideologies are matched more heavily on axes that are
+     * definitional to them.
+     *
+     * Formula: sqrt( sum( salience[axis] * (user[axis] - ideology[axis])^2 ) )
+     */
+    function calculateSalienceWeightedDistance(userScores, ideology) {
+        let weightedSumSquares = 0;
+        let totalWeight = 0;
 
-    setBarValue("equality", equality)
-    setBarValue("wealth", wealth)
-    setBarValue("peace", peace)
-    setBarValue("might", might)
-    setBarValue("liberty", liberty)
-    setBarValue("authority", authority)
-    setBarValue("progress", progress)
-    setBarValue("tradition", tradition)
+        // Default salience if ideology doesn't have salience defined
+        const defaultSalience = {};
+        AXES.forEach(axis => defaultSalience[axis] = 0.5);
 
-    document.getElementById("economic-label").innerHTML = setLabel(equality, econArray)
-    document.getElementById("diplomatic-label").innerHTML = setLabel(peace, diplArray)
-    document.getElementById("state-label").innerHTML = setLabel(liberty, govtArray)
-    document.getElementById("society-label").innerHTML = setLabel(progress, sctyArray)
+        const salience = ideology.salience || defaultSalience;
 
-    ideology = ""
-    ideodist = Infinity
+        AXES.forEach(axis => {
+            const userVal = userScores[axis] ?? 50;
+            const ideoVal = ideology.stats[axis] ?? 50;
+            const weight = salience[axis] || 0.5;
+
+            const diff = userVal - ideoVal;
+            weightedSumSquares += weight * (diff * diff);
+            totalWeight += weight;
+        });
+
+        // Normalize by total weight to make distances comparable
+        if (totalWeight === 0) return Infinity;
+        return Math.sqrt(weightedSumSquares / totalWeight);
+    }
+
+    /*
+     * Convert distance to match percentage (0-100)
+     * Using a sigmoid-like function where:
+     * - Distance 0 = 100% match
+     * - Distance ~25 (moderate difference on key axes) = ~75% match
+     * - Distance ~50 (significant difference) = ~50% match
+     */
+    function distanceToMatchPercent(distance) {
+        // Max distance would be ~100 (opposite on all axes)
+        // We want a curve that gives meaningful percentages
+        const matchPercent = 100 * Math.exp(-distance / 40);
+        return Math.max(0, Math.min(100, matchPercent)).toFixed(1);
+    }
+
+    // Helper to safely parse URL parameter with default and range validation
+    function getAxisValue(param) {
+        const val = getQueryVariable(param);
+        if (val === null) return 50; // Default to neutral
+        const parsed = parseFloat(val);
+        if (isNaN(parsed)) return 50;
+        // Clamp to valid 0-100 range
+        return Math.max(0, Math.min(100, parsed));
+    }
+
+    // Get scores from URL - Original 8 axes
+    const eqlt = getAxisValue("eqlt");
+    const lbrt = getAxisValue("lbrt");
+    const prog = getAxisValue("prog");
+    const idnt = getAxisValue("idnt");
+    const popl = getAxisValue("popl");
+    const intv = getAxisValue("intv");
+    const ecol = getAxisValue("ecol");
+    const powr = getAxisValue("powr");
+
+    // Get scores from URL - New 8 axes
+    const chng = getAxisValue("chng");
+    const hmnn = getAxisValue("hmnn");
+    const mns = getAxisValue("mns");
+    const prty = getAxisValue("prty");
+    const scr = getAxisValue("scr");
+    const tech = getAxisValue("tech");
+    const wlfr = getAxisValue("wlfr");
+    const intg = getAxisValue("intg");
+
+    // Get consistency score
+    const consistency = getAxisValue("consistency") || 100;
+
+    // Check if results were refined with follow-up questions
+    const isRefined = getQueryVariable("refined") === "true";
+    const targetedAxesParam = getQueryVariable("targetedAxes");
+    const targetedAxes = targetedAxesParam ? decodeURIComponent(targetedAxesParam).split(',') : [];
+
+    // Check for adaptive quiz results
+    const isAdaptive = getQueryVariable("adaptive") === "true";
+    const totalQuestions = getQueryVariable("totalQuestions");
+    const mechanismsParam = getQueryVariable("mechanisms");
+    const mechanisms = mechanismsParam ? decodeURIComponent(mechanismsParam).split(',').filter(m => m) : [];
+
+    // Mechanism tag display names
+    const mechanismLabels = {
+        // Ownership
+        'nationalization': 'State Ownership',
+        'state_ownership': 'State Ownership',
+        'cooperative': 'Worker Cooperatives',
+        'worker_ownership': 'Worker Ownership',
+        'social_wealth_fund': 'Social Wealth Fund',
+        'market_socialism': 'Market Socialism',
+        'redistribution': 'Redistribution',
+        'social_democracy': 'Social Democratic',
+        'status_quo': 'Current System',
+        'market_preference': 'Market-Oriented',
+        // Market Role
+        'planning': 'Economic Planning',
+        'anti_market': 'Post-Market',
+        'regulated_markets': 'Regulated Markets',
+        'mixed_economy': 'Mixed Economy',
+        'pragmatic': 'Pragmatic Approach',
+        'light_regulation': 'Light Regulation',
+        'free_market': 'Free Markets',
+        'laissez_faire': 'Laissez-Faire',
+        // Change Velocity
+        'revolutionary': 'Revolutionary',
+        'rupture': 'System Rupture',
+        'rapid_reform': 'Rapid Reform',
+        'transformative': 'Transformative',
+        'ambitious': 'Ambitious Reform',
+        'gradual': 'Gradual Change',
+        'generational': 'Generational',
+        'incremental': 'Incremental',
+        'conservative_reform': 'Cautious Reform',
+        'conservative': 'Conservative',
+        'stability': 'Stability',
+        // Decision Making
+        'direct_democracy': 'Direct Democracy',
+        'participatory': 'Participatory',
+        'representative': 'Representative',
+        'democratic': 'Democratic',
+        'constitutional': 'Constitutional',
+        'liberal_democracy': 'Liberal Democracy',
+        'technocratic': 'Technocratic',
+        'expertise': 'Expert-Guided',
+        'authoritarian': 'Authoritarian',
+        'centralized': 'Centralized',
+        // Power Structure
+        'decentralized': 'Decentralized',
+        'municipal': 'Municipalist',
+        'local': 'Local Focus',
+        'federal': 'Federalist',
+        'regional': 'Regional',
+        'national': 'Nationalist',
+        'unitary': 'Unitary',
+        // Welfare
+        'universal_services': 'Universal Services',
+        'decommodification': 'Decommodified',
+        'ubi': 'Universal Basic Income',
+        'cash_transfers': 'Cash Transfers',
+        'social_insurance': 'Social Insurance',
+        'means_tested': 'Means-Tested',
+        'targeted': 'Targeted Aid',
+        'charity': 'Voluntary/Charity',
+        'voluntary': 'Voluntary',
+        // Integration
+        'pluralist': 'Pluralist',
+        'multicultural': 'Multicultural',
+        'intercultural': 'Intercultural',
+        'civic': 'Civic Integration',
+        'assimilationist': 'Assimilationist',
+        'melting_pot': 'Melting Pot',
+        // Progress
+        'radical': 'Radical Change',
+        'progressive': 'Progressive',
+        'reformist': 'Reformist',
+        'evidence_based': 'Evidence-Based',
+        'moderate': 'Moderate',
+        'preserving': 'Preserving',
+        'restorationist': 'Restorationist',
+        // Technology
+        'techno_optimist': 'Tech Optimist',
+        'accelerationist': 'Accelerationist',
+        'tech_positive': 'Tech Positive',
+        'selective': 'Selective',
+        'precautionary': 'Precautionary',
+        'tech_skeptic': 'Tech Skeptic',
+        // Environment
+        'deep_ecology': 'Deep Ecology',
+        'ecocentric': 'Ecocentric',
+        'sustainability': 'Sustainability',
+        'green': 'Green',
+        'balanced': 'Balanced',
+        'anthropocentric': 'Human-Centered',
+        'growth_first': 'Growth First',
+        // International
+        'pacifist': 'Pacifist',
+        'non_intervention': 'Non-Intervention',
+        'diplomatic': 'Diplomatic',
+        'peace_first': 'Peace First',
+        'realist': 'Realist',
+        'deterrence': 'Strong Deterrence',
+        'interventionist': 'Interventionist',
+        'hawkish': 'Hawkish',
+        'globalist': 'Globalist',
+        'world_federalist': 'World Federalist',
+        'internationalist': 'Internationalist',
+        'sovereigntist': 'Sovereigntist',
+        'isolationist': 'Isolationist',
+        // National Identity
+        'post_national': 'Post-National',
+        'cosmopolitan': 'Cosmopolitan',
+        'civic_nationalist': 'Civic Nationalist',
+        'cultural_nationalist': 'Cultural Nationalist',
+        'nationalist': 'Nationalist',
+        'traditionalist': 'Traditionalist',
+        'ethno_nationalist': 'Ethno-Nationalist',
+        // Third Way / Clintonism distinguishers
+        'protectionist': 'Protectionist',
+        'domestic_first': 'Domestic First',
+        'fair_trade': 'Fair Trade',
+        'third_way': 'Third Way',
+        'market_fundamentalist': 'Market Fundamentalist',
+        'universal': 'Universal',
+        'unconditional': 'Unconditional',
+        'comprehensive': 'Comprehensive',
+        'workfare': 'Workfare',
+        'minimal': 'Minimal',
+        'private': 'Private',
+        // Anarchist distinguishers
+        'syndicalist': 'Syndicalist',
+        'union_led': 'Union-Led',
+        'council': 'Council-Based',
+        'communalist': 'Communalist',
+        'communist': 'Communist',
+        'needs_based': 'Needs-Based',
+        'equal_shares': 'Equal Shares',
+        'labor_vouchers': 'Labor Vouchers',
+        'time_based': 'Time-Based',
+        'collectivist': 'Collectivist',
+        'contribution_based': 'Contribution-Based',
+        'skill_differentiated': 'Skill-Differentiated',
+        'market_wages': 'Market Wages',
+        // Revolutionary strategy
+        'spontaneous': 'Spontaneous',
+        'luxemburgist': 'Luxemburgist',
+        'mass_movement': 'Mass Movement',
+        'reformist_tactics': 'Reformist Tactics',
+        'vanguard': 'Vanguard',
+        'leninist': 'Leninist',
+        'left_communist': 'Left Communist',
+        'anti_institutional': 'Anti-Institutional',
+        'insurrectionary': 'Insurrectionary',
+        'entryism': 'Entryism',
+        'dual_power': 'Dual Power',
+        'parallel': 'Parallel',
+        'new_organization': 'New Organization',
+        'purist': 'Purist',
+        'anti_union': 'Anti-Union',
+        'council_communist': 'Council Communist',
+        'anti_party': 'Anti-Party',
+        // Liberal distinguishers
+        'rawlsian': 'Rawlsian',
+        'veil_of_ignorance': 'Veil of Ignorance',
+        'difference_principle': 'Difference Principle',
+        'egalitarian': 'Egalitarian',
+        'utilitarian': 'Utilitarian',
+        'libertarian': 'Libertarian',
+        'rights_first': 'Rights-First',
+        'strict_equality': 'Strict Equality',
+        'procedural': 'Procedural',
+        'liberal': 'Liberal',
+        'meritocratic': 'Meritocratic',
+        'desert_based': 'Desert-Based',
+        'inegalitarian': 'Inegalitarian',
+        'incentive_based': 'Incentive-Based',
+        // Human nature
+        'cooperative': 'Cooperative',
+        'optimistic': 'Optimistic',
+        'conditional': 'Conditional',
+        'institutionalist': 'Institutionalist',
+        'self_interest': 'Self-Interest',
+        'incentive_design': 'Incentive Design',
+        'hobbesian': 'Hobbesian',
+        'perfectionist': 'Perfectionist',
+        'utopian': 'Utopian',
+        'meliorist': 'Meliorist',
+        'realist': 'Realist',
+        'constrained': 'Constrained',
+        'tragic': 'Tragic',
+        'anti_utopian': 'Anti-Utopian',
+        // Secularism
+        'militant_secular': 'Militant Secular',
+        'laicite': 'Laïcité',
+        'secular_liberal': 'Secular Liberal',
+        'accommodationist': 'Accommodationist',
+        'religious_voice': 'Religious Voice',
+        'theocratic': 'Theocratic',
+        'religious_law': 'Religious Law',
+        'rationalist': 'Rationalist',
+        'secular_ethics': 'Secular Ethics',
+        'humanist': 'Humanist',
+        'empathy_based': 'Empathy-Based',
+        'cultural': 'Cultural',
+        'relativist': 'Relativist',
+        'traditional': 'Traditional',
+        'religious': 'Religious',
+        'divine_command': 'Divine Command',
+        'theistic': 'Theistic',
+        // Conservative-Right cluster
+        'ethnonationalist': 'Ethno-Nationalist',
+        'blood_soil': 'Blood & Soil',
+        'national_identity': 'National Identity',
+        'universalist': 'Universalist',
+        'restrictionist': 'Restrictionist',
+        'nativist': 'Nativist',
+        'selective_immigration': 'Selective Immigration',
+        'managed_immigration': 'Managed Immigration',
+        'pro_immigration': 'Pro-Immigration',
+        'integrationist': 'Integrationist',
+        'open_borders': 'Open Borders',
+        'strongman': 'Strongman',
+        'caesarist': 'Caesarist',
+        'authoritative': 'Authoritative',
+        'institutional': 'Institutional',
+        'limited_government': 'Limited Government',
+        'decentralist': 'Decentralist',
+        'anti_authoritarian': 'Anti-Authoritarian',
+        'palingenetic': 'Palingenetic',
+        'revolutionary_nationalist': 'Revolutionary Nationalist',
+        'populist_revolt': 'Populist Revolt',
+        'anti_elite': 'Anti-Elite',
+        'hierarchist': 'Hierarchist',
+        'natural_hierarchy': 'Natural Hierarchy',
+        'nuanced': 'Nuanced',
+        'social_constructionist': 'Social Constructionist',
+        'radical_egalitarian': 'Radical Egalitarian',
+        'anti_hierarchy': 'Anti-Hierarchy',
+        'religious_traditionalist': 'Religious Traditionalist',
+        'burkean': 'Burkean',
+        'moderate_traditionalist': 'Moderate Traditionalist',
+        'adaptive': 'Adaptive',
+        'rational_traditionalist': 'Rational Traditionalist',
+        'enlightened': 'Enlightened',
+        'secular': 'Secular',
+        'populist': 'Populist',
+        'producerist': 'Producerist',
+        'middle_class': 'Middle Class',
+        'elitist': 'Elitist',
+        'militarist': 'Militarist',
+        'strong_defense': 'Strong Defense',
+        'defensive': 'Defensive',
+        'restrained': 'Restrained',
+        'anti_militarist': 'Anti-Militarist',
+        'pacifist_leaning': 'Pacifist-Leaning',
+        // Libertarian-Right cluster
+        'propertarian': 'Propertarian',
+        'absolute_rights': 'Absolute Rights',
+        'strong_property': 'Strong Property',
+        'minarchist': 'Minarchist',
+        'social_property': 'Social Property',
+        'socialist_property': 'Socialist Property',
+        'anarcho_capitalist': 'Anarcho-Capitalist',
+        'stateless': 'Stateless',
+        'night_watchman': 'Night Watchman',
+        'classical_liberal': 'Classical Liberal',
+        'social_liberal': 'Social Liberal',
+        'welfare_state': 'Welfare State',
+        'statist': 'Statist',
+        'rules_based': 'Rules-Based',
+        'regulated_competition': 'Regulated Competition',
+        'regulated_market': 'Regulated Market',
+        'social_market': 'Social Market',
+        'planist': 'Planist',
+        'objectivist': 'Objectivist',
+        'heroic_individualism': 'Heroic Individualism',
+        'moderate_meritocratic': 'Moderate Meritocratic',
+        'luck_egalitarian': 'Luck Egalitarian',
+        'redistributive': 'Redistributive',
+        'anti_wealth': 'Anti-Wealth',
+        'paleolibertarian': 'Paleolibertarian',
+        'traditionalist_libertarian': 'Traditionalist Libertarian',
+        'fusionist': 'Fusionist',
+        'economic_focus': 'Economic Focus',
+        'consistent_libertarian': 'Consistent Libertarian',
+        'neutral': 'Neutral',
+        'bleeding_heart': 'Bleeding Heart',
+        'left_libertarian': 'Left-Libertarian',
+        'libertarian_socialist': 'Libertarian Socialist',
+        // Religious cluster
+        'confessional_state': 'Confessional State',
+        'religious_establishment': 'Religious Establishment',
+        'benevolent_neutrality': 'Benevolent Neutrality',
+        'separationist': 'Separationist',
+        'secular_state': 'Secular State',
+        'anti_clerical': 'Anti-Clerical',
+        'liberation_theology': 'Liberation Theology',
+        'prophetic': 'Prophetic',
+        'distributist': 'Distributist',
+        'third_way_economics': 'Third Way Economics',
+        'compassionate': 'Compassionate',
+        'mixed': 'Mixed',
+        'traditional_economics': 'Traditional Economics',
+        'charitable': 'Charitable',
+        'prosperity_gospel': 'Prosperity Gospel',
+        'market_faith': 'Market Faith',
+        'fundamentalist': 'Fundamentalist',
+        'literalist': 'Literalist',
+        'magisterial': 'Magisterial',
+        'moderate_religious': 'Moderate Religious',
+        'contextual': 'Contextual',
+        'personal_faith': 'Personal Faith',
+        'secular_ethics': 'Secular Ethics',
+        'modernist': 'Modernist',
+        'prophetic_activism': 'Prophetic Activism',
+        'liberation': 'Liberation',
+        'social_gospel': 'Social Gospel',
+        'reform': 'Reform',
+        'personal_piety': 'Personal Piety',
+        'communal': 'Communal',
+        'quietist': 'Quietist',
+        'otherworldly': 'Otherworldly',
+        'establishment': 'Establishment',
+        'religious_nationalism': 'Religious Nationalism',
+        'exclusivist': 'Exclusivist',
+        'cultural_religion': 'Cultural Religion',
+        'dominant': 'Dominant',
+        'distinguished': 'Distinguished',
+        'civic_secular': 'Civic Secular',
+        'post_religious': 'Post-Religious',
+        'legitimist': 'Legitimist',
+        'divine_right': 'Divine Right',
+        'constitutional_monarch': 'Constitutional Monarch',
+        'popular_sovereignty': 'Popular Sovereignty',
+        'anarchist': 'Anarchist',
+        'anti_authority': 'Anti-Authority',
+        // Green/Ecological cluster
+        'degrowth': 'Degrowth',
+        'post_growth': 'Post-Growth',
+        'steady_state': 'Steady State',
+        'sufficiency': 'Sufficiency',
+        'green_growth': 'Green Growth',
+        'decoupling': 'Decoupling',
+        'ecomodernist': 'Ecomodernist',
+        'skeptic': 'Skeptic',
+        'anti_tech': 'Anti-Tech',
+        'primitivist': 'Primitivist',
+        'appropriate_tech': 'Appropriate Tech',
+        'cautious': 'Cautious',
+        'bright_green': 'Bright Green',
+        'tech_solution': 'Tech Solution',
+        'techno_fix': 'Techno-Fix',
+        'biocentric': 'Biocentric',
+        'limits': 'Limits',
+        'mixed_value': 'Mixed Value',
+        'dominion': 'Dominion',
+        'promethean': 'Promethean',
+        'eco_socialist': 'Eco-Socialist',
+        'intersectional': 'Intersectional',
+        'environmental_justice': 'Environmental Justice',
+        'equity': 'Equity',
+        'related': 'Related',
+        'distinct': 'Distinct',
+        'apolitical_green': 'Apolitical Green',
+        'free_market_environmentalism': 'Free Market Environmentalism',
+        'property_rights': 'Property Rights',
+        'anti_civ': 'Anti-Civilization',
+        'neo_luddite': 'Neo-Luddite',
+        'post_industrial': 'Post-Industrial',
+        'transformation': 'Transformation',
+        'progress': 'Progress',
+        'pro_civilization': 'Pro-Civilization',
+        'anti_capitalist': 'Anti-Capitalist',
+        'green_left': 'Green Left',
+        'independent_green': 'Independent Green',
+        'post_ideological': 'Post-Ideological',
+        'green_conservative': 'Green Conservative',
+        'green_libertarian': 'Green Libertarian',
+        'market_environmentalism': 'Market Environmentalism',
+        // Socialist-Statist cluster
+        'vanguardist': 'Vanguardist',
+        'mass_party': 'Mass Party',
+        'democratic_centralist': 'Democratic Centralist',
+        'movement_led': 'Movement-Led',
+        'democratic_socialist': 'Democratic Socialist',
+        'electoral': 'Electoral',
+        'libertarian_socialist': 'Libertarian Socialist',
+        'permanent_revolution': 'Permanent Revolution',
+        'national_liberation': 'National Liberation',
+        'anti_imperialist': 'Anti-Imperialist',
+        'socialism_one_country': 'Socialism in One Country',
+        'national_path': 'National Path',
+        'national_communism': 'National Communism',
+        'local_conditions': 'Local Conditions',
+        'autarkic_socialism': 'Autarkic Socialism',
+        'self_reliance': 'Self-Reliance',
+        'totalitarian': 'Totalitarian',
+        'party_state': 'Party-State',
+        'guided_socialism': 'Guided Socialism',
+        'managerial': 'Managerial',
+        'reformed_communist': 'Reformed Communist',
+        'pluralist_tendency': 'Pluralist Tendency',
+        'multi_party': 'Multi-Party',
+        'stateless_socialism': 'Stateless Socialism',
+        'peasant_revolution': 'Peasant Revolution',
+        'rural': 'Rural',
+        'worker_peasant_alliance': 'Worker-Peasant Alliance',
+        'broad_front': 'Broad Front',
+        'proletarian': 'Proletarian',
+        'industrial': 'Industrial',
+        'new_left': 'New Left',
+        'intellectual': 'Intellectual',
+        'student': 'Student',
+        'anti_parliamentarian': 'Anti-Parliamentarian',
+        'revolutionary_reformist': 'Revolutionary Reformist',
+        'tactical': 'Tactical',
+        'dual_approach': 'Dual Approach',
+        'flexible': 'Flexible',
+        'gradualist': 'Gradualist',
+        'fabian': 'Fabian',
+        'incrementalist': 'Incrementalist',
+        'self_management': 'Self-Management',
+        'autogestion': 'Autogestion',
+        'co_management': 'Co-Management',
+        'consultative': 'Consultative',
+        'managed': 'Managed',
+        'planned': 'Planned',
+        'technocratic_planning': 'Technocratic Planning',
+        'guerrilla': 'Guerrilla',
+        'armed_struggle': 'Armed Struggle',
+        'bolivarian': 'Bolivarian',
+        '21st_century_socialism': '21st Century Socialism',
+        'pink_tide': 'Pink Tide',
+        'social_democratic': 'Social Democratic',
+        'social_movement': 'Social Movement',
+        'autonomist': 'Autonomist',
+        'indigenous': 'Indigenous',
+        'anti_state_capitalism': 'Anti-State Capitalism',
+        'transitional': 'Transitional',
+        'tactical_market': 'Tactical Market',
+        'competitive_state': 'Competitive State',
+        'state_capitalism': 'State Capitalism',
+        'developmental': 'Developmental',
+        // Anarchist Variants cluster
+        'market_anarchist': 'Market Anarchist',
+        'mutualist': 'Mutualist',
+        'freed_markets': 'Freed Markets',
+        'pluralist_economy': 'Pluralist Economy',
+        'labor_exchange': 'Labor Exchange',
+        'communist_anarchist': 'Communist Anarchist',
+        'gift_economy': 'Gift Economy',
+        'platformist': 'Platformist',
+        'organized': 'Organized',
+        'union': 'Union',
+        'synthesist': 'Synthesist',
+        'affinity_group': 'Affinity Group',
+        'post_left': 'Post-Left',
+        'autonomous': 'Autonomous',
+        'intersectional_anarchist': 'Intersectional Anarchist',
+        'identity_focused': 'Identity-Focused',
+        'social_anarchist': 'Social Anarchist',
+        'holistic': 'Holistic',
+        'class_primary': 'Class-Primary',
+        'allied': 'Allied',
+        'individualist': 'Individualist',
+        'skeptical': 'Skeptical',
+        'post_identity': 'Post-Identity',
+        'nihilist': 'Nihilist',
+        'propaganda_deed': 'Propaganda of the Deed',
+        'militant': 'Militant',
+        'nonviolent': 'Nonviolent',
+        'principled': 'Principled',
+        'pacifist_anarchist': 'Pacifist Anarchist',
+        'anti_violence': 'Anti-Violence',
+        'egoist': 'Egoist',
+        'individualist_anarchist': 'Individualist Anarchist',
+        'social_individualist': 'Social Individualist',
+        'solidaristic': 'Solidaristic',
+        'crypto_anarchist': 'Crypto-Anarchist',
+        'tech_positive': 'Tech-Positive',
+        'anarcho_transhumanist': 'Anarcho-Transhumanist',
+        'enhancement': 'Enhancement',
+        'green_anarchist': 'Green Anarchist',
+        'anarcho_primitivist': 'Anarcho-Primitivist',
+        // Economic Schools cluster
+        'free_banking': 'Free Banking',
+        'gold_standard': 'Gold Standard',
+        'monetarist': 'Monetarist',
+        'inflation_targeting': 'Inflation Targeting',
+        'keynesian': 'Keynesian',
+        'active': 'Active',
+        'mmt': 'MMT',
+        'functional_finance': 'Functional Finance',
+        'fiscal_expansion': 'Fiscal Expansion',
+        'counter_cyclical': 'Counter-Cyclical',
+        'balanced_budget': 'Balanced Budget',
+        'supply_side': 'Supply-Side',
+        'tax_cuts': 'Tax Cuts',
+        'fiscal_conservative': 'Fiscal Conservative',
+        'minimal_state': 'Minimal State',
+        'industrial_policy': 'Industrial Policy',
+        'strategic_trade': 'Strategic Trade',
+        'radical_free_trade': 'Radical Free Trade',
+        'austrian': 'Austrian',
+        'natural_competition': 'Natural Competition',
+        'chicago_school': 'Chicago School',
+        'consumer_welfare': 'Consumer Welfare',
+        'antitrust': 'Antitrust',
+        'competition_policy': 'Competition Policy',
+        'ordoliberal': 'Ordoliberal',
+        'framework': 'Framework',
+        'anti_monopoly': 'Anti-Monopoly',
+        'public_control': 'Public Control',
+        'georgist': 'Georgist',
+        'land_value_tax': 'Land Value Tax',
+        'broad_ownership': 'Broad Ownership',
+        'regulated': 'Regulated',
+        'absolutist': 'Absolutist',
+        'full_ownership': 'Full Ownership',
+        // American Political cluster
+        'states_rights': 'States Rights',
+        'federalist': 'Federalist',
+        'pragmatic_federalism': 'Pragmatic Federalism',
+        'strong_federal': 'Strong Federal',
+        'centralist': 'Centralist',
+        'hamiltonian': 'Hamiltonian',
+        'great_society': 'Great Society',
+        'programmatic': 'Programmatic',
+        'new_deal': 'New Deal',
+        'coalition': 'Coalition',
+        'centrist_reform': 'Centrist Reform',
+        'neoliberal': 'Neoliberal',
+        'private_progressivism': 'Private Progressivism',
+        'market_reform': 'Market Reform',
+        'activist_government': 'Activist Government',
+        'moderate_liberal': 'Moderate Liberal',
+        'progressive_republican': 'Progressive Republican',
+        'reaganite': 'Reaganite',
+        'agrarian': 'Agrarian',
+        'rural_priority': 'Rural Priority',
+        'populist_agrarian': 'Populist Agrarian',
+        'family_farm': 'Family Farm',
+        'fair_distribution': 'Fair Distribution',
+        'urban_focused': 'Urban Focused',
+        'growth_center': 'Growth Center',
+        'urban_democratic': 'Urban Democratic',
+        'majoritarian': 'Majoritarian',
+        // Third-World/Regional cluster
+        'pan_nationalist': 'Pan-Nationalist',
+        'regional_unity': 'Regional Unity',
+        'regional_cooperation': 'Regional Cooperation',
+        'sovereignty': 'Sovereignty',
+        'pragmatic_regional': 'Pragmatic Regional',
+        'bilateral': 'Bilateral',
+        'national_first': 'National First',
+        'development': 'Development',
+        'anti_integration': 'Anti-Integration',
+        'socialist_development': 'Socialist Development',
+        'non_aligned': 'Non-Aligned',
+        'third_way_development': 'Third Way Development',
+        'developmental_state': 'Developmental State',
+        'export_led': 'Export-Led',
+        'globalization': 'Globalization',
+        'neoliberal_development': 'Neoliberal Development',
+        'market_led': 'Market-Led',
+        'authoritarian_modernizer': 'Authoritarian Modernizer',
+        'guided_democracy': 'Guided Democracy',
+        'democratic_development': 'Democratic Development',
+        'grassroots': 'Grassroots',
+        'secularizing_modernizer': 'Secularizing Modernizer',
+        'westernizing': 'Westernizing',
+        'selective_modernization': 'Selective Modernization',
+        'cultural_preservation': 'Cultural Preservation',
+        'tradition_guided': 'Tradition-Guided',
+        'religious_modernization': 'Religious Modernization',
+        'anti_western': 'Anti-Western',
+        'indigenous_autonomy': 'Indigenous Autonomy',
+        'self_determination': 'Self-Determination',
+        'cultural_autonomy': 'Cultural Autonomy',
+        'protected': 'Protected',
+        'integrated_rights': 'Integrated Rights',
+        'civic_equality': 'Civic Equality',
+        // Tech/Future cluster
+        'transhumanist': 'Transhumanist',
+        'moderate_enhancement': 'Moderate Enhancement',
+        'therapeutic_plus': 'Therapeutic Plus',
+        'therapeutic_only': 'Therapeutic Only',
+        'bioconservative': 'Bioconservative',
+        'dignity': 'Dignity',
+        'anti_enhancement': 'Anti-Enhancement',
+        'natural_limits': 'Natural Limits',
+        'post_scarcity': 'Post-Scarcity',
+        'full_automation': 'Full Automation',
+        'leisure_society': 'Leisure Society',
+        'adaptation': 'Adaptation',
+        'retraining': 'Retraining',
+        'protect_jobs': 'Protect Jobs',
+        'work_ethic': 'Work Ethic',
+        'anti_automation': 'Anti-Automation',
+        'hyperstitional': 'Hyperstitional',
+        'techno_progressive': 'Techno-Progressive',
+        'fast_change': 'Fast Change',
+        'moderate_pace': 'Moderate Pace',
+        'sustainable': 'Sustainable',
+        'deceleration': 'Deceleration',
+        'anti_modern': 'Anti-Modern',
+        'longtermist': 'Longtermist',
+        'future_focused': 'Future-Focused',
+        'moderate_longtermism': 'Moderate Longtermism',
+        'risk_focused': 'Risk-Focused',
+        'intergenerational': 'Intergenerational',
+        'presentist': 'Presentist',
+        'near_term': 'Near-Term',
+        'present_focused': 'Present-Focused',
+        'technical_privacy': 'Technical Privacy',
+        'digital_rights': 'Digital Rights',
+        'legal_protection': 'Legal Protection',
+        'security_first': 'Security First',
+        'limited_privacy': 'Limited Privacy',
+        'post_privacy': 'Post-Privacy',
+        'transparency': 'Transparency',
+        'expert_rule': 'Expert Rule',
+        'evidence_based': 'Evidence-Based',
+        'accountable_expertise': 'Accountable Expertise',
+        'advisory_expertise': 'Advisory Expertise',
+        'democratic_final': 'Democratic Final',
+        'deliberative': 'Deliberative',
+        'anti_expert': 'Anti-Expert',
+        'stakeholder': 'Stakeholder',
+        'corporate_responsibility': 'Corporate Responsibility',
+        'woke_capitalism': 'Woke Capitalism',
+        'conscious_business': 'Conscious Business',
+        'regulated_capitalism': 'Regulated Capitalism',
+        'compliant': 'Compliant',
+        'shareholder_primary': 'Shareholder Primary',
+        'friedmanite': 'Friedmanite',
+        'anti_corporate': 'Anti-Corporate',
+        'democratic_economy': 'Democratic Economy'
+    };
+
+    // Axis labels for display
+    const axisLabels = {
+        'eqlt': 'Equality', 'lbrt': 'Liberty', 'prog': 'Progress', 'idnt': 'Identity',
+        'popl': 'Populism', 'intv': 'Intervention', 'ecol': 'Ecology', 'powr': 'Power',
+        'chng': 'Change', 'hmnn': 'Human Nature', 'mns': 'Means', 'prty': 'Property',
+        'scr': 'Secularism', 'tech': 'Technology', 'wlfr': 'Welfare', 'intg': 'Integration'
+    };
+
+    // Display refinement info if applicable
+    if (isRefined) {
+        document.getElementById("refined-badge").classList.remove('hidden');
+        document.getElementById("refinement-info").style.display = 'block';
+
+        const axesDisplay = document.getElementById("targeted-axes-display");
+        targetedAxes.forEach(axis => {
+            const tag = document.createElement("span");
+            tag.className = "axis-tag";
+            tag.textContent = axisLabels[axis] || axis;
+            axesDisplay.appendChild(tag);
+        });
+    }
+
+    // Display adaptive quiz info and mechanism preferences
+    if (isAdaptive && mechanisms.length > 0) {
+        document.getElementById("mechanism-section").style.display = 'block';
+
+        const tagsContainer = document.getElementById("mechanism-tags");
+        // Deduplicate and display
+        const uniqueMechanisms = [...new Set(mechanisms)];
+        uniqueMechanisms.forEach(mech => {
+            const tag = document.createElement("span");
+            tag.className = "mechanism-tag";
+            tag.textContent = mechanismLabels[mech] || mech.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            tagsContainer.appendChild(tag);
+        });
+
+        // Show quiz stats
+        if (totalQuestions) {
+            document.getElementById("quiz-stats").textContent =
+                `Completed adaptive quiz with ${totalQuestions} questions (vs. 186 in standard mode)`;
+        }
+    } else if (isAdaptive) {
+        // Adaptive quiz but no mechanisms - still show adaptive badge
+        if (totalQuestions) {
+            document.getElementById("mechanism-section").style.display = 'block';
+            document.getElementById("mechanism-section").querySelector('p').textContent =
+                'You completed the adaptive quiz. No specific approach preferences were recorded.';
+            document.getElementById("quiz-stats").textContent =
+                `Completed adaptive quiz with ${totalQuestions} questions`;
+        }
+    }
+
+    // Build user scores object
+    const userScores = {
+        eqlt: eqlt, lbrt: lbrt, prog: prog, idnt: idnt,
+        popl: popl, intv: intv, ecol: ecol, powr: powr,
+        chng: chng, hmnn: hmnn, mns: mns, prty: prty,
+        scr: scr, tech: tech, wlfr: wlfr, intg: intg
+    };
+
+    // Calculate opposite poles - Original 8
+    market = (100 - eqlt).toFixed(1);
+    authority = (100 - lbrt).toFixed(1);
+    tradition = (100 - prog).toFixed(1);
+    nation = (100 - idnt).toFixed(1);
+    elite = (100 - popl).toFixed(1);
+    dove = (100 - intv).toFixed(1);
+    anthropo = (100 - ecol).toFixed(1);
+    central = (100 - powr).toFixed(1);
+
+    // Calculate opposite poles - New 8
+    gradualist = (100 - chng).toFixed(1);
+    constrained = (100 - hmnn).toFixed(1);
+    pragmatic = (100 - mns).toFixed(1);
+    privateProp = (100 - prty).toFixed(1);
+    religious = (100 - scr).toFixed(1);
+    techskeptic = (100 - tech).toFixed(1);
+    targeted = (100 - wlfr).toFixed(1);
+    assimilationist = (100 - intg).toFixed(1);
+
+    // Display consistency score
+    document.getElementById("consistency-value").innerHTML = consistency.toFixed(1) + "%";
+    const consistencyBadge = document.getElementById("consistency-badge");
+    if (consistency >= 80) {
+        consistencyBadge.innerHTML = "High";
+        consistencyBadge.className = "consistency-badge consistency-high";
+    } else if (consistency >= 60) {
+        consistencyBadge.innerHTML = "Moderate";
+        consistencyBadge.className = "consistency-badge consistency-medium";
+    } else {
+        consistencyBadge.innerHTML = "Low";
+        consistencyBadge.className = "consistency-badge consistency-low";
+    }
+
+    // Set bar values - Original 8
+    setBarValue("equality", eqlt);
+    setBarValue("market", market);
+    setBarValue("liberty", lbrt);
+    setBarValue("authority", authority);
+    setBarValue("progress", prog);
+    setBarValue("tradition", tradition);
+    setBarValue("globe", idnt);
+    setBarValue("nation", nation);
+    setBarValue("populist", popl);
+    setBarValue("elite", elite);
+    setBarValue("hawk", intv);
+    setBarValue("dove", dove);
+    setBarValue("eco", ecol);
+    setBarValue("anthropo", anthropo);
+    setBarValue("decentral", powr);
+    setBarValue("central", central);
+
+    // Set bar values - New 8
+    setBarValue("revolutionary", chng);
+    setBarValue("gradualist", gradualist);
+    setBarValue("unconstrained", hmnn);
+    setBarValue("constrained", constrained);
+    setBarValue("principled", mns);
+    setBarValue("pragmatic", pragmatic);
+    setBarValue("commons", prty);
+    setBarValue("private", privateProp);
+    setBarValue("secular", scr);
+    setBarValue("religious", religious);
+    setBarValue("technophile", tech);
+    setBarValue("techskeptic", techskeptic);
+    setBarValue("universal", wlfr);
+    setBarValue("targeted", targeted);
+    setBarValue("pluralist", intg);
+    setBarValue("assimilationist", assimilationist);
+
+    // Set labels - Original 8
+    document.getElementById("equality-label").innerHTML = setLabel(eqlt, eqltArray);
+    document.getElementById("liberty-label").innerHTML = setLabel(lbrt, lbrtArray);
+    document.getElementById("progress-label").innerHTML = setLabel(prog, progArray);
+    document.getElementById("identity-label").innerHTML = setLabel(idnt, idntArray);
+    document.getElementById("populism-label").innerHTML = setLabel(popl, poplArray);
+    document.getElementById("intervention-label").innerHTML = setLabel(intv, intvArray);
+    document.getElementById("ecology-label").innerHTML = setLabel(ecol, ecolArray);
+    document.getElementById("power-label").innerHTML = setLabel(powr, powrArray);
+
+    // Set labels - New 8
+    document.getElementById("change-label").innerHTML = setLabel(chng, chngArray);
+    document.getElementById("nature-label").innerHTML = setLabel(hmnn, hmnnArray);
+    document.getElementById("means-label").innerHTML = setLabel(mns, mnsArray);
+    document.getElementById("property-label").innerHTML = setLabel(prty, prtyArray);
+    document.getElementById("secular-label").innerHTML = setLabel(scr, scrArray);
+    document.getElementById("tech-label").innerHTML = setLabel(tech, techArray);
+    document.getElementById("welfare-label").innerHTML = setLabel(wlfr, wlfrArray);
+    document.getElementById("integration-label").innerHTML = setLabel(intg, intgArray);
+
+    // Set accessible descriptions for screen readers (WCAG 1.1.1)
+    function setAxisDescription(descId, leftLabel, leftPercent, rightLabel, rightPercent) {
+        const desc = document.getElementById(descId);
+        if (desc) {
+            desc.textContent = `${leftLabel} ${leftPercent}%, ${rightLabel} ${rightPercent}%`;
+        }
+    }
+
+    setAxisDescription("equality-desc", "Free Market", market, "Economic Equality", eqlt);
+    setAxisDescription("liberty-desc", "State Authority", authority, "Civil Liberty", lbrt);
+    setAxisDescription("progress-desc", "Traditional", tradition, "Progressive", prog);
+    setAxisDescription("identity-desc", "Nationalist", nation, "Cosmopolitan", idnt);
+    setAxisDescription("populism-desc", "Pluralist/Elite", elite, "Populist", popl);
+    setAxisDescription("intervention-desc", "Non-interventionist", dove, "Interventionist", intv);
+    setAxisDescription("ecology-desc", "Human-Centered", anthropo, "Nature-Centered", ecol);
+    setAxisDescription("power-desc", "Concentrated", central, "Distributed", powr);
+    setAxisDescription("change-desc", "Gradualist", gradualist, "Revolutionary", chng);
+    setAxisDescription("nature-desc", "Fixed Human Nature", constrained, "Improvable Human Nature", hmnn);
+    setAxisDescription("means-desc", "Results-Focused", pragmatic, "Values-Focused", mns);
+    setAxisDescription("property-desc", "Private", privateProp, "Commons", prty);
+    setAxisDescription("secular-desc", "Religious", religious, "Secular", scr);
+    setAxisDescription("tech-desc", "Skeptic", techskeptic, "Enthusiast", tech);
+    setAxisDescription("welfare-desc", "Targeted", targeted, "Universal", wlfr);
+    setAxisDescription("integration-desc", "Shared Culture", assimilationist, "Cultural Diversity", intg);
+
+    // Calculate salience-weighted distances for all ideologies
+    let ideologyMatches = [];
     for (var i = 0; i < ideologies.length; i++) {
-        dist = 0
-        dist += Math.pow(Math.abs(ideologies[i].stats.econ - equality), 2)
-        dist += Math.pow(Math.abs(ideologies[i].stats.govt - liberty), 2)
-        dist += Math.pow(Math.abs(ideologies[i].stats.dipl - peace), 1.73856063)
-        dist += Math.pow(Math.abs(ideologies[i].stats.scty - progress), 1.73856063)
-        if (dist < ideodist) {
-            ideology = ideologies[i].name
-            ideodist = dist
-        }
-    }
-    document.getElementById("ideology-label").innerHTML = ideology
-
-    function createImage(src, x, y, w, h) {
-        img = new Image ()
-        img.src = src
-        img.onLoad = function() {
-            ctx.drawImage(img, x, y, w, h)
-        }
+        const distance = calculateSalienceWeightedDistance(userScores, ideologies[i]);
+        const matchPercent = distanceToMatchPercent(distance);
+        ideologyMatches.push({
+            name: ideologies[i].name,
+            description: ideologies[i].description || null,
+            distance: distance,
+            matchPercent: parseFloat(matchPercent)
+        });
     }
 
-    window.onload = function() {
-        var c = document.createElement("canvas")
-        var ctx = c.getContext("2d")
-        c.width = 800;
-        c.height = 650;
-        ctx.fillStyle = "#EEEEEE"
-        ctx.fillRect(0,0,800,650);
+    // Sort by match percentage (descending)
+    ideologyMatches.sort((a, b) => b.matchPercent - a.matchPercent);
 
-        img = document.getElementById("img-equality")
-        ctx.drawImage(img, 20, 170, 100, 100);
-        img = document.getElementById("img-wealth")
-        ctx.drawImage(img, 680, 170, 100, 100)
-        img = document.getElementById("img-might")
-        ctx.drawImage(img, 20, 290, 100, 100)
-        img = document.getElementById("img-peace")
-        ctx.drawImage(img, 680, 290, 100, 100)
-        img = document.getElementById("img-liberty")
-        ctx.drawImage(img, 20, 410, 100, 100)
-        img = document.getElementById("img-authority")
-        ctx.drawImage(img, 680, 410, 100, 100)
-        img = document.getElementById("img-tradition")
-        ctx.drawImage(img, 20, 530, 100, 100)
-        img = document.getElementById("img-progress")
-        ctx.drawImage(img, 680, 530, 100, 100)
+    // Update matching explanation if refined
+    if (isRefined) {
+        document.getElementById("matching-explanation").innerHTML =
+            "Matching uses salience-weighted distance with <strong>enhanced precision</strong> from follow-up questions. " +
+            "Your top matches have been refined based on targeted questions about the axes where your closest ideologies differ most.";
+    }
 
-        ctx.fillStyle="#222222"
-        ctx.fillRect(120, 180, 560, 80)
-        ctx.fillRect(120, 300, 560, 80)
-        ctx.fillRect(120, 420, 560, 80)
-        ctx.fillRect(120, 540, 560, 80)
-        ctx.fillStyle="#f44336"
-        ctx.fillRect(120, 184, 5.6*equality-2, 72)
-        ctx.fillStyle="#00897b"
-        ctx.fillRect(682-5.6*wealth, 184, 5.6*wealth-2, 72)
-        ctx.fillStyle="#ff9800"
-        ctx.fillRect(120, 304, 5.6*might-2, 72)
-        ctx.fillStyle="#03a9f4"
-        ctx.fillRect(682-5.6*peace, 304, 5.6*peace-2, 72)
-        ctx.fillStyle="#ffeb3b"
-        ctx.fillRect(120, 424, 5.6*liberty-2, 72)
-        ctx.fillStyle="#3f51b5"
-        ctx.fillRect(682-5.6*authority, 424, 5.6*authority-2, 72)
-        ctx.fillStyle="#8bc34a"
-        ctx.fillRect(120, 544, 5.6*tradition-2, 72)
-        ctx.fillStyle="#9c27b0"
-        ctx.fillRect(682-5.6*progress, 544, 5.6*progress-2, 72)
-        ctx.fillStyle="#222222"
-        ctx.font="700 80px Montserrat"
-        ctx.textAlign="left"
-        ctx.fillText("8values", 20, 90)
-        ctx.font="50px Montserrat"
-        ctx.fillText(ideology, 20, 140)
+    // Display top 5 matches
+    const matchesContainer = document.getElementById("matches-container");
+    const topMatches = ideologyMatches.slice(0, 5);
+    topMatches.forEach((match, idx) => {
+        const card = document.createElement("div");
+        card.className = idx === 0 ? "match-card primary" : "match-card";
 
-        ctx.textAlign="left"
-        if (equality  > 30) {ctx.fillText(equality + "%", 130, 237.5)}
-        if (might     > 30) {ctx.fillText(might + "%", 130, 357.5)}
-        if (liberty   > 30) {ctx.fillText(liberty + "%", 130, 477.5)}
-        if (tradition > 30) {ctx.fillText(tradition + "%", 130, 597.5)}
-        ctx.textAlign="right"
-        if (wealth    > 30) {ctx.fillText(wealth + "%", 670, 237.5)}
-        if (peace     > 30) {ctx.fillText(peace + "%", 670, 357.5)}
-        if (authority > 30) {ctx.fillText(authority + "%", 670, 477.5)}
-        if (progress  > 30) {ctx.fillText(progress + "%", 670, 597.5)}
+        const descriptionHtml = match.description
+            ? `<div class="match-description">${match.description}</div>`
+            : '';
 
-        ctx.font="300 30px Montserrat"
-        ctx.fillText("8values.github.io", 780, 60)
-		ctx.fillText(version, 780, 90)
-        ctx.textAlign="center"
-        ctx.fillText("Economic Axis: " + document.getElementById("economic-label").innerHTML, 400, 175)
-        ctx.fillText("Diplomatic Axis: " + document.getElementById("diplomatic-label").innerHTML, 400, 295)
-        ctx.fillText("Civil Axis: " + document.getElementById("state-label").innerHTML, 400, 415)
-        ctx.fillText("Societal Axis: " + document.getElementById("society-label").innerHTML, 400, 535)
+        card.innerHTML = `
+            <div class="match-card-header">
+                <span class="match-name">${idx + 1}. ${match.name}</span>
+                <span class="match-score">${match.matchPercent}% match</span>
+            </div>
+            ${descriptionHtml}
+        `;
+        matchesContainer.appendChild(card);
+    });
+
+    // Primary ideology for banner
+    const primaryIdeology = topMatches[0].name;
+
+    // Generate shareable image
+    async function generateShareImage() {
+        try {
+        const c = document.createElement("canvas");
+        const ctx = c.getContext("2d");
+        if (!ctx) {
+            console.warn('Canvas not supported');
+            return;
+        }
+
+        // Safety check for required data
+        if (!topMatches || topMatches.length === 0) {
+            console.warn('No ideology matches available for image generation');
+            return;
+        }
+
+        // Dimensions: 900x1600 (9:16 ratio - standard social media)
+        c.width = 900;
+        c.height = 1600;
+
+        // Theme detection
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+        // Color palette
+        const colors = {
+            bgStart: isDark ? '#1a1a2e' : '#f8f9fa',
+            bgEnd: isDark ? '#16213e' : '#e9ecef',
+            text: isDark ? '#f8f9fa' : '#212529',
+            textMuted: isDark ? '#a0a0a0' : '#6c757d',
+            cardBg: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+            cardBorder: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)',
+            accent: '#6366f1', // Indigo accent
+            accentAlt: '#8b5cf6' // Purple for gradients
+        };
+
+        // Axis configuration with icons
+        const axisConfig = [
+            { key: 'eqlt', name: 'Equality', leftIcon: 'market', rightIcon: 'equality', color: '#f44336' },
+            { key: 'lbrt', name: 'Liberty', leftIcon: 'authority', rightIcon: 'liberty', color: '#e6c700' },
+            { key: 'prog', name: 'Progress', leftIcon: 'tradition', rightIcon: 'progress', color: '#9c27b0' },
+            { key: 'idnt', name: 'Identity', leftIcon: 'nation', rightIcon: 'globe', color: '#03a9f4' },
+            { key: 'popl', name: 'Populism', leftIcon: 'elite', rightIcon: 'populist', color: '#e91e63' },
+            { key: 'intv', name: 'Intervention', leftIcon: 'dove', rightIcon: 'hawk', color: '#b71c1c' },
+            { key: 'ecol', name: 'Ecology', leftIcon: 'anthropo', rightIcon: 'eco', color: '#4caf50' },
+            { key: 'powr', name: 'Power', leftIcon: 'central', rightIcon: 'decentral', color: '#00bcd4' },
+            { key: 'chng', name: 'Change', leftIcon: 'gradualist', rightIcon: 'revolutionary', color: '#ff5722' },
+            { key: 'hmnn', name: 'Human Nature', leftIcon: 'constrained', rightIcon: 'unconstrained', color: '#e69500' },
+            { key: 'mns', name: 'Means', leftIcon: 'pragmatic', rightIcon: 'principled', color: '#7b1fa2' },
+            { key: 'prty', name: 'Property', leftIcon: 'private', rightIcon: 'commons', color: '#c62828' },
+            { key: 'scr', name: 'Secularism', leftIcon: 'religious', rightIcon: 'secular', color: '#26a69a' },
+            { key: 'tech', name: 'Technology', leftIcon: 'techskeptic', rightIcon: 'technophile', color: '#00acc1' },
+            { key: 'wlfr', name: 'Welfare', leftIcon: 'targeted', rightIcon: 'universal', color: '#d81b60' },
+            { key: 'intg', name: 'Integration', leftIcon: 'assimilationist', rightIcon: 'pluralist', color: '#7cb342' }
+        ];
+
+        // Helper: Draw rounded rectangle path
+        function roundRect(x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        // Helper: Draw glassmorphism card
+        function drawCard(x, y, w, h, radius = 20) {
+            ctx.save();
+            // Shadow
+            ctx.shadowColor = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.1)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetY = 8;
+
+            // Card background
+            roundRect(x, y, w, h, radius);
+            ctx.fillStyle = colors.cardBg;
+            ctx.fill();
+
+            // Border
+            ctx.shadowColor = 'transparent';
+            ctx.strokeStyle = colors.cardBorder;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // Embedded SVG icons as base64 data URLs (avoids CORS issues with file://)
+        const iconData = {
+            'anthropo': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEFudGhyb3BvY2VudHJpYyAtIEh1bWFuIGZpZ3VyZSBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiM5ZTllOWUiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIEh1bWFuIGZpZ3VyZSAoVml0cnV2aWFuLXN0eWxlKSBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBIZWFkIC0tPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIxNCIgcj0iNSIvPgogICAgPCEtLSBCb2R5IC0tPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMTkiIHgyPSIzMiIgeTI9IjMyIi8+CiAgICA8IS0tIEFybXMgc3RyZXRjaGVkIC0tPgogICAgPGxpbmUgeDE9IjE4IiB5MT0iMjQiIHgyPSI0NiIgeTI9IjI0Ii8+CiAgICA8IS0tIExlZ3MgLS0+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIzMiIgeDI9IjIyIiB5Mj0iNDIiLz4KICAgIDxsaW5lIHgxPSIzMiIgeTE9IjMyIiB4Mj0iNDIiIHkyPSI0MiIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhVTUFOPC90ZXh0Pgo8L3N2Zz4K',
+            'assimilationist': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEFzc2ltaWxhdGlvbmlzdCAtIE1hbnkgYmVjb21pbmcgb25lL3NhbWUgLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzRlMzQyZSIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gRGlmZmVyZW50IHNoYXBlcyBhdCB0b3AgYmVjb21pbmcgc2FtZSBjaXJjbGVzIGF0IGJvdHRvbSAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBUb3Agcm93OiBkaWZmZXJlbnQgc2hhcGVzIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIxNiwxMiAyMCwyMCAxMiwyMCIvPgogICAgPHJlY3QgeD0iMjgiIHk9IjEyIiB3aWR0aD0iOCIgaGVpZ2h0PSI4Ii8+CiAgICA8cG9seWdvbiBwb2ludHM9IjQ0LDEyIDUyLDE2IDQ0LDIwIDM2LDE2Ii8+CgogICAgPCEtLSBBcnJvdyBwb2ludGluZyBkb3duIC0tPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMjQiIHgyPSIzMiIgeTI9IjMwIi8+CiAgICA8cGF0aCBkPSJNMjggMjcgTDMyIDMyIEwzNiAyNyIvPgoKICAgIDwhLS0gQm90dG9tIHJvdzogYWxsIHNhbWUgY2lyY2xlcyAtLT4KICAgIDxjaXJjbGUgY3g9IjE2IiBjeT0iMzgiIHI9IjUiLz4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMzgiIHI9IjUiLz4KICAgIDxjaXJjbGUgY3g9IjQ4IiBjeT0iMzgiIHI9IjUiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BU1NJTUlMQVRFPC90ZXh0Pgo8L3N2Zz4K',
+            'authority': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFN0YXRlIEF1dGhvcml0eSAtIFNoaWVsZCBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiMzZjUxYjUiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIFNoaWVsZCBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTMyIDEwIEw0OCAxNiBMNDggMjggUTQ4IDQwIDMyIDQ0IFExNiA0MCAxNiAyOCBMMTYgMTYgWiIvPgogICAgPCEtLSBJbm5lciBzdGFyL2JhZGdlIC0tPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyNiIgcj0iNiIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkFVVEhPUklUWTwvdGV4dD4KPC9zdmc+Cg==',
+            'central': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIENvbmNlbnRyYXRlZCBQb3dlciAtIFB5cmFtaWQgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjNjczYWI3Ii8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBQeXJhbWlkIGljb24gLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMzIgMTIgTDUwIDQwIEwxNCA0MCBaIiBmaWxsPSIjZmZmZmZmIiBmaWxsLW9wYWNpdHk9IjAuMjUiLz4KICAgIDxsaW5lIHgxPSIyMyIgeTE9IjMwIiB4Mj0iNDEiIHkyPSIzMCIvPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyMCIgcj0iMyIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNFTlRSQUw8L3RleHQ+Cjwvc3ZnPgo=',
+            'commons': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIENvbW1vbnMvU2hhcmVkIC0gQ2lyY2xlIG9mIHBlb3BsZSBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiNjNjI4MjgiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIFNoYXJpbmcvY29tbW9ucyAtIGludGVyY29ubmVjdGVkIGNpcmNsZXMgaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBUaHJlZSBvdmVybGFwcGluZyBjaXJjbGVzIHJlcHJlc2VudGluZyBzaGFyZWQgcmVzb3VyY2VzIC0tPgogICAgPGNpcmNsZSBjeD0iMjYiIGN5PSIyMCIgcj0iOCIvPgogICAgPGNpcmNsZSBjeD0iMzgiIGN5PSIyMCIgcj0iOCIvPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIzMiIgcj0iOCIvPgogICAgPCEtLSBDZW50ZXIgcG9pbnQgd2hlcmUgdGhleSBtZWV0IC0tPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyNCIgcj0iMiIgZmlsbD0iI2ZmZmZmZiIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNPTU1PTlM8L3RleHQ+Cjwvc3ZnPgo=',
+            'constrained': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIENvbnN0cmFpbmVkIEh1bWFuIE5hdHVyZSAtIExvY2svbGltaXQgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjNDU1YTY0Ii8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBDYWdlIGJhcnMgLyBjb25zdHJhaW50IGljb24gLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8IS0tIFZlcnRpY2FsIGJhcnMgLS0+CiAgICA8bGluZSB4MT0iMjAiIHkxPSIxMiIgeDI9IjIwIiB5Mj0iNDIiLz4KICAgIDxsaW5lIHgxPSIzMiIgeTE9IjEyIiB4Mj0iMzIiIHkyPSI0MiIvPgogICAgPGxpbmUgeDE9IjQ0IiB5MT0iMTIiIHgyPSI0NCIgeTI9IjQyIi8+CiAgICA8IS0tIEhvcml6b250YWwgYmFycyAtLT4KICAgIDxsaW5lIHgxPSIxNCIgeTE9IjE4IiB4Mj0iNTAiIHkyPSIxOCIvPgogICAgPGxpbmUgeDE9IjE0IiB5MT0iMzYiIHgyPSI1MCIgeTI9IjM2Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Qk9VTkQ8L3RleHQ+Cjwvc3ZnPgo=',
+            'decentral': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIERpc3RyaWJ1dGVkIFBvd2VyIC0gTmV0d29yayBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiMwMGJjZDQiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIE5ldHdvcmsgaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDwhLS0gQ29ubmVjdGlvbnMgZmlyc3QgKGJlaGluZCBub2RlcykgLS0+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIyNiIgeDI9IjE4IiB5Mj0iMTYiLz4KICAgIDxsaW5lIHgxPSIzMiIgeTE9IjI2IiB4Mj0iNDYiIHkyPSIxNiIvPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMjYiIHgyPSIxOCIgeTI9IjM2Ii8+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIyNiIgeDI9IjQ2IiB5Mj0iMzYiLz4KICAgIDwhLS0gTm9kZXMgLS0+CiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI2IiByPSI0IiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8Y2lyY2xlIGN4PSIxOCIgY3k9IjE2IiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8Y2lyY2xlIGN4PSI0NiIgY3k9IjE2IiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8Y2lyY2xlIGN4PSIxOCIgY3k9IjM2IiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8Y2lyY2xlIGN4PSI0NiIgY3k9IjM2IiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNSIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RElTVFJJQlVURUQ8L3RleHQ+Cjwvc3ZnPgo=',
+            'dove': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIE5vbi1pbnRlcnZlbnRpb25pc3QvRG92ZSAtIFBlYWNlIHN5bWJvbCBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiM4YmMzNGEiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIFBlYWNlIHN5bWJvbCBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBPdXRlciBjaXJjbGUgLS0+CiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI2IiByPSIxNCIvPgogICAgPCEtLSBQZWFjZSBzeW1ib2wgbGluZXMgLS0+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIxMiIgeDI9IjMyIiB5Mj0iNDAiLz4KICAgIDxsaW5lIHgxPSIzMiIgeTE9IjI2IiB4Mj0iMjIiIHkyPSIzNiIvPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMjYiIHgyPSI0MiIgeTI9IjM2Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UEVBQ0U8L3RleHQ+Cjwvc3ZnPgo=',
+            'eco': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEVjb2NlbnRyaWMgLSBMZWFmIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzRjYWY1MCIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gTGVhZiBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTMyIDQwIFExNiAzNiAxNCAyMiBRMTQgMTIgMzIgMTIgUTUwIDEyIDUwIDIyIFE0OCAzNiAzMiA0MCIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjI1Ii8+CiAgICA8cGF0aCBkPSJNMzIgNDAgTDMyIDI0Ii8+CiAgICA8cGF0aCBkPSJNMzIgMjQgUTI0IDI4IDIwIDI0Ii8+CiAgICA8cGF0aCBkPSJNMzIgMjQgUTQwIDI4IDQ0IDI0Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RUNPPC90ZXh0Pgo8L3N2Zz4K',
+            'elite': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEVsaXRlL1BsdXJhbGlzdCAtIENyb3duIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzYwN2Q4YiIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gQ3Jvd24gaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0xNCAzNiBMMTQgMjAgTDI0IDI4IEwzMiAxNiBMNDAgMjggTDUwIDIwIEw1MCAzNiBaIiBmaWxsPSIjZmZmZmZmIiBmaWxsLW9wYWNpdHk9IjAuMjUiLz4KICAgIDxsaW5lIHgxPSIxNCIgeTE9IjQwIiB4Mj0iNTAiIHkyPSI0MCIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjciIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkVMSVRFPC90ZXh0Pgo8L3N2Zz4K',
+            'equality': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEVjb25vbWljIEVxdWFsaXR5IC0gU2NhbGVzL0JhbGFuY2UgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjZjQ0MzM2Ii8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBCYWxhbmNlIHNjYWxlcyBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMTIiIHgyPSIzMiIgeTI9IjQwIi8+CiAgICA8bGluZSB4MT0iMTYiIHkxPSIyMCIgeDI9IjQ4IiB5Mj0iMjAiLz4KICAgIDxsaW5lIHgxPSIxNiIgeTE9IjIwIiB4Mj0iMTYiIHkyPSIzMCIvPgogICAgPGxpbmUgeDE9IjQ4IiB5MT0iMjAiIHgyPSI0OCIgeTI9IjMwIi8+CiAgICA8cGF0aCBkPSJNMTIgMzAgUTE2IDM4IDIwIDMwIi8+CiAgICA8cGF0aCBkPSJNNDQgMzAgUTQ4IDM4IDUyIDMwIi8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RVFVQUxJVFk8L3RleHQ+Cjwvc3ZnPgo=',
+            'globe': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIENvc21vcG9saXRhbi9HbG9iYWwgLSBHbG9iZSBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiMwM2E5ZjQiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIEdsb2JlIGljb24gLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI2IiByPSIxNCIvPgogICAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iMjYiIHJ4PSI2IiByeT0iMTQiLz4KICAgIDxsaW5lIHgxPSIxOCIgeTE9IjI2IiB4Mj0iNDYiIHkyPSIyNiIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkdMT0JBTDwvdGV4dD4KPC9zdmc+Cg==',
+            'gradualist': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEdyYWR1YWxpc3QgLSBTdGVwcy9zdGFpcnMgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjNWQ0MDM3Ii8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBTdGFpcnMgaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik0xNCA0MCBMMTQgMzQgTDIyIDM0IEwyMiAyOCBMMzAgMjggTDMwIDIyIEwzOCAyMiBMMzggMTYgTDQ2IDE2IEw0NiAxMiBMNTAgMTIiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HUkFEVUFMPC90ZXh0Pgo8L3N2Zz4K',
+            'hawk': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEludGVydmVudGlvbmlzdC9IYXdrIC0gQ3Jvc3NoYWlycyBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiNiNzFjMWMiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIENyb3NzaGFpcnMvdGFyZ2V0IGljb24gLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI2IiByPSIxMiIvPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyNiIgcj0iNSIvPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMTAiIHgyPSIzMiIgeTI9IjE3Ii8+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIzNSIgeDI9IjMyIiB5Mj0iNDIiLz4KICAgIDxsaW5lIHgxPSIxNiIgeTE9IjI2IiB4Mj0iMjMiIHkyPSIyNiIvPgogICAgPGxpbmUgeDE9IjQxIiB5MT0iMjYiIHgyPSI0OCIgeTI9IjI2Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SEFXSzwvdGV4dD4KPC9zdmc+Cg==',
+            'liberty': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIENpdmlsIExpYmVydHkgLSBCcm9rZW4gY2hhaW4gaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjZTZjNzAwIi8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBCcm9rZW4gY2hhaW4gaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDwhLS0gTGVmdCBjaGFpbiBsaW5rIC0tPgogICAgPGVsbGlwc2UgY3g9IjIwIiBjeT0iMjYiIHJ4PSI4IiByeT0iNSIvPgogICAgPCEtLSBSaWdodCBjaGFpbiBsaW5rIC0gYnJva2VuL3NlcGFyYXRlZCAtLT4KICAgIDxlbGxpcHNlIGN4PSI0NCIgY3k9IjI2IiByeD0iOCIgcnk9IjUiLz4KICAgIDwhLS0gQnJlYWsgbWFya3MgLyBmcmVlZG9tIHNwYXJrcyAtLT4KICAgIDxsaW5lIHgxPSIzMCIgeTE9IjIyIiB4Mj0iMzQiIHkyPSIxOCIvPgogICAgPGxpbmUgeDE9IjMwIiB5MT0iMzAiIHgyPSIzNCIgeTI9IjM0Ii8+CiAgICA8bGluZSB4MT0iMzEiIHkxPSIyNiIgeDI9IjMzIiB5Mj0iMjYiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI3IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MSUJFUlRZPC90ZXh0Pgo8L3N2Zz4K',
+            'market': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIEZyZWUgTWFya2V0IC0gRG9sbGFyIHNpZ24gaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjMDA4OTdiIi8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBEb2xsYXIgc2lnbiBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMTIiIHgyPSIzMiIgeTI9IjQyIi8+CiAgICA8cGF0aCBkPSJNNDAgMThjMC00LTMuNS01LTgtNXMtOCAxLTggNWMwIDggMTYgNCAxNiAxMiAwIDQtMy41IDUtOCA1cy04LTEtOC01Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TUFSS0VUUzwvdGV4dD4KPC9zdmc+Cg==',
+            'nation': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIE5hdGlvbmFsaXN0IC0gRmxhZyBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiNmZjk4MDAiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIEZsYWcgaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxsaW5lIHgxPSIxOCIgeTE9IjEwIiB4Mj0iMTgiIHkyPSI0MiIvPgogICAgPHBhdGggZD0iTTE4IDEyIEw0NiAxMiBMNDIgMjAgTDQ2IDI4IEwxOCAyOCBaIiBmaWxsPSIjZmZmZmZmIiBmaWxsLW9wYWNpdHk9IjAuMjUiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5OQVRJT048L3RleHQ+Cjwvc3ZnPgo=',
+            'pluralist': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFBsdXJhbGlzdCAtIE1hbnkgY29leGlzdGluZywgc3RheWluZyBkaXN0aW5jdCAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjN2NiMzQyIi8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBNb3NhaWMvZ3JpZCBvZiBkaWZmZXJlbnQgc2hhcGVzIGNvZXhpc3RpbmcgLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDwhLS0gVG9wIHJvdyAtLT4KICAgIDxjaXJjbGUgY3g9IjE4IiBjeT0iMTYiIHI9IjUiLz4KICAgIDxyZWN0IHg9IjMwIiB5PSIxMSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiByeD0iMSIvPgogICAgPHBvbHlnb24gcG9pbnRzPSI1MiwxMSA1NywyMSA0NywyMSIvPgoKICAgIDwhLS0gQm90dG9tIHJvdyAtIHNhbWUgdmFyaWV0eSwgc2hvd2luZyBwZXJzaXN0ZW5jZSBvZiBkaWZmZXJlbmNlIC0tPgogICAgPHBvbHlnb24gcG9pbnRzPSIxOCwzMCAyMyw0MCAxMyw0MCIvPgogICAgPGNpcmNsZSBjeD0iMzciIGN5PSIzNSIgcj0iNSIvPgogICAgPHJlY3QgeD0iNDciIHk9IjMwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHJ4PSIxIi8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UExVUkFMPC90ZXh0Pgo8L3N2Zz4K',
+            'populist': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFBvcHVsaXN0IC0gTWVnYXBob25lL3ZvaWNlIG9mIHBlb3BsZSBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiNlOTFlNjMiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIE1lZ2FwaG9uZSBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8IS0tIE1lZ2FwaG9uZSBib2R5IC0tPgogICAgPHBhdGggZD0iTTE0IDIyIEwxNCAzMiBMMjQgMzYgTDI0IDE4IFoiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4zIi8+CiAgICA8IS0tIE1lZ2FwaG9uZSBjb25lIC0tPgogICAgPHBhdGggZD0iTTI0IDE4IEw0OCAxMiBMNDggNDIgTDI0IDM2Ii8+CiAgICA8IS0tIEhhbmRsZSAtLT4KICAgIDxsaW5lIHgxPSIxNCIgeTE9IjMyIiB4Mj0iMTQiIHkyPSI0MCIvPgogICAgPCEtLSBTb3VuZCB3YXZlcyAtLT4KICAgIDxwYXRoIGQ9Ik01MiAyMCBRNTYgMjYgNTIgMzIiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QT1BVTElTVDwvdGV4dD4KPC9zdmc+Cg==',
+            'pragmatic': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFByYWdtYXRpYyAtIFdyZW5jaC90b29sIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzc4OTA5YyIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gV3JlbmNoIGljb24gLSBzaW1wbGUgYW5kIGNsZWFyIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBXcmVuY2ggaGFuZGxlIC0tPgogICAgPGxpbmUgeDE9IjE4IiB5MT0iMzgiIHgyPSIzOCIgeTI9IjE4Ii8+CiAgICA8IS0tIFdyZW5jaCBoZWFkIC0tPgogICAgPHBhdGggZD0iTTM4IDE4IEw0NCAxMiBMNTAgMTggTDQ0IDI0IEwzOCAxOCIvPgogICAgPCEtLSBXcmVuY2ggamF3IG9wZW5pbmcgLS0+CiAgICA8cGF0aCBkPSJNNDQgMTIgTDQ0IDI0Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNS41IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUkFHTUFUSUM8L3RleHQ+Cjwvc3ZnPgo=',
+            'principled': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFByaW5jaXBsZWQgLSBDb21wYXNzIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzdiMWZhMiIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gQ29tcGFzcyBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyNiIgcj0iMTQiLz4KICAgIDwhLS0gQ29tcGFzcyBuZWVkbGUgLS0+CiAgICA8cGF0aCBkPSJNMzIgMTIgTDM2IDI2IEwzMiA0MCBMMjggMjYgWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjI1Ii8+CiAgICA8cGF0aCBkPSJNMzIgMTIgTDM2IDI2IEwyOCAyNiBaIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI2IiByPSIyIiBmaWxsPSIjZmZmZmZmIi8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNSIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UFJJTkNJUExFRDwvdGV4dD4KPC9zdmc+Cg==',
+            'private': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFByaXZhdGUgUHJvcGVydHkgLSBMb2NrIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzE1NjVjMCIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gTG9jayBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHJlY3QgeD0iMjAiIHk9IjI0IiB3aWR0aD0iMjQiIGhlaWdodD0iMTgiIHJ4PSIyIiBmaWxsPSIjZmZmZmZmIiBmaWxsLW9wYWNpdHk9IjAuMjUiLz4KICAgIDxwYXRoIGQ9Ik0yNCAyNCBMMjQgMTggUTI0IDEyIDMyIDEyIFE0MCAxMiA0MCAxOCBMNDAgMjQiLz4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjMiIGZpbGw9IiNmZmZmZmYiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUklWQVRFPC90ZXh0Pgo8L3N2Zz4K',
+            'progress': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFByb2dyZXNzaXZlIC0gRm9yd2FyZCBhcnJvdyBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiM5YzI3YjAiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIEZvcndhcmQgYXJyb3dzIGljb24gLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMjAgMjYgTDMyIDE0IEw0NCAyNiIvPgogICAgPHBhdGggZD0iTTIwIDM4IEwzMiAyNiBMNDQgMzgiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QUk9HUkVTUzwvdGV4dD4KPC9zdmc+Cg==',
+            'religious': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFJlbGlnaW91cyAtIFNpbXBsZSBjcm9zcy9mYWl0aCBzeW1ib2wgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjNmQ0YzQxIi8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBTaW1wbGUgZmFpdGggc3ltYm9sIC0gc3Rhci9saWdodCByYXlzIGljb24gLS0+CiAgPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8IS0tIENlbnRyYWwgbGlnaHQvc3RhciAtLT4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMjYiIHI9IjYiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4zIi8+CiAgICA8IS0tIFJheXMgZW1hbmF0aW5nIC0tPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMTAiIHgyPSIzMiIgeTI9IjE2Ii8+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIzNiIgeDI9IjMyIiB5Mj0iNDIiLz4KICAgIDxsaW5lIHgxPSIxNiIgeTE9IjI2IiB4Mj0iMjIiIHkyPSIyNiIvPgogICAgPGxpbmUgeDE9IjQyIiB5MT0iMjYiIHgyPSI0OCIgeTI9IjI2Ii8+CiAgICA8IS0tIERpYWdvbmFsIHJheXMgLS0+CiAgICA8bGluZSB4MT0iMjAiIHkxPSIxNCIgeDI9IjI0IiB5Mj0iMTgiLz4KICAgIDxsaW5lIHgxPSI0NCIgeTE9IjE0IiB4Mj0iNDAiIHkyPSIxOCIvPgogICAgPGxpbmUgeDE9IjIwIiB5MT0iMzgiIHgyPSIyNCIgeTI9IjM0Ii8+CiAgICA8bGluZSB4MT0iNDQiIHkxPSIzOCIgeDI9IjQwIiB5Mj0iMzQiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5GQUlUSDwvdGV4dD4KPC9zdmc+Cg==',
+            'revolutionary': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFJldm9sdXRpb25hcnkgLSBTdGFyYnVyc3QgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjZmY1NzIyIi8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBTdGFyYnVyc3QgaWNvbiAtIHN0cm9rZSBzdHlsZSBjb25zaXN0ZW50IHdpdGggb3RoZXJzIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBNYWluIHJheXMgLS0+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIxMCIgeDI9IjMyIiB5Mj0iNDIiLz4KICAgIDxsaW5lIHgxPSIxNCIgeTE9IjI2IiB4Mj0iNTAiIHkyPSIyNiIvPgogICAgPGxpbmUgeDE9IjE4IiB5MT0iMTQiIHgyPSI0NiIgeTI9IjM4Ii8+CiAgICA8bGluZSB4MT0iNDYiIHkxPSIxNCIgeDI9IjE4IiB5Mj0iMzgiLz4KICAgIDwhLS0gQ2VudGVyIGNpcmNsZSAtLT4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMjYiIHI9IjUiIGZpbGw9IiNmZmZmZmYiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5SRVZPTFVUSU9OPC90ZXh0Pgo8L3N2Zz4K',
+            'secular': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFNlY3VsYXIgLSBBdG9tIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iIzI2YTY5YSIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gQXRvbSBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8ZWxsaXBzZSBjeD0iMzIiIGN5PSIyNiIgcng9IjE2IiByeT0iNiIvPgogICAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iMjYiIHJ4PSIxNiIgcnk9IjYiIHRyYW5zZm9ybT0icm90YXRlKDYwIDMyIDI2KSIvPgogICAgPGVsbGlwc2UgY3g9IjMyIiBjeT0iMjYiIHJ4PSIxNiIgcnk9IjYiIHRyYW5zZm9ybT0icm90YXRlKC02MCAzMiAyNikiLz4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMjYiIHI9IjQiIGZpbGw9IiNmZmZmZmYiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5TRUNVTEFSPC90ZXh0Pgo8L3N2Zz4K',
+            'targeted': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFRhcmdldGVkIFdlbGZhcmUgLSBCdWxsc2V5ZSBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiM1NDZlN2EiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIFRhcmdldC9idWxsc2V5ZSBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyNiIgcj0iMTQiLz4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMjYiIHI9IjciLz4KICAgIDxjaXJjbGUgY3g9IjMyIiBjeT0iMjYiIHI9IjIiIGZpbGw9IiNmZmZmZmYiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1LjUiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRBUkdFVEVEPC90ZXh0Pgo8L3N2Zz4K',
+            'technophile': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFRlY2ggRW50aHVzaWFzdCAtIFJvY2tldCBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiMwMGFjYzEiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIFJvY2tldCBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPHBhdGggZD0iTTMyIDEwIFE0MCAxOCA0MCAzMCBMMzYgMzYgTDI4IDM2IEwyNCAzMCBRMjQgMTggMzIgMTAiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4yNSIvPgogICAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyMiIgcj0iNCIvPgogICAgPHBhdGggZD0iTTI0IDMwIEwxOCAzOCBMMjQgMzQiLz4KICAgIDxwYXRoIGQ9Ik00MCAzMCBMNDYgMzggTDQwIDM0Ii8+CiAgICA8cGF0aCBkPSJNMjggMzYgUTMyIDQ0IDM2IDM2Ii8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEVDSDwvdGV4dD4KPC9zdmc+Cg==',
+            'techskeptic': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFRlY2ggU2tlcHRpYyAtIENyb3NzZWQgb3V0IGNpcmN1aXQvY2hpcCBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiM4ZDZlNjMiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIENyb3NzZWQgb3V0IHRlY2hub2xvZ3kgaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSBTaW1wbGUgY29tcHV0ZXIvc2NyZWVuIC0tPgogICAgPHJlY3QgeD0iMTgiIHk9IjE0IiB3aWR0aD0iMjgiIGhlaWdodD0iMjAiIHJ4PSIyIi8+CiAgICA8IS0tIFNjcmVlbiBzaGluZSAtLT4KICAgIDxsaW5lIHgxPSIyMiIgeTE9IjE4IiB4Mj0iMjYiIHkyPSIxOCIvPgogICAgPCEtLSBTdGFuZCAtLT4KICAgIDxsaW5lIHgxPSIzMiIgeTE9IjM0IiB4Mj0iMzIiIHkyPSIzOCIvPgogICAgPGxpbmUgeDE9IjI0IiB5MT0iMzgiIHgyPSI0MCIgeTI9IjM4Ii8+CiAgICA8IS0tIFggY3Jvc3NpbmcgaXQgb3V0IC0tPgogICAgPGxpbmUgeDE9IjE0IiB5MT0iMTAiIHgyPSI1MCIgeTI9IjQyIiBzdHJva2Utd2lkdGg9IjMiLz4KICAgIDxsaW5lIHgxPSI1MCIgeTE9IjEwIiB4Mj0iMTQiIHkyPSI0MiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPC9nPgoKICA8dGV4dCB4PSIzMiIgeT0iNTYiIGZvbnQtZmFtaWx5PSJzeXN0ZW0tdWksIC1hcHBsZS1zeXN0ZW0sIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNiIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iI2Y1ZjVmNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+U0tFUFRJQzwvdGV4dD4KPC9zdmc+Cg==',
+            'tradition': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFRyYWRpdGlvbmFsIC0gQ2xhc3NpY2FsIHBpbGxhciBpY29uIC0tPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjgiIHJ5PSI4IiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQyIiByeD0iNSIgcnk9IjUiIGZpbGw9IiM3OTU1NDgiLz4KICA8cmVjdCB4PSI1IiB5PSI0NyIgd2lkdGg9IjU0IiBoZWlnaHQ9IjEyIiByeD0iMCIgcnk9IjAiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1NSIgd2lkdGg9IjU0IiBoZWlnaHQ9IjQiIHJ4PSIwIiByeT0iNSIgZmlsbD0iIzFhMWExYSIvPgoKICA8IS0tIENsYXNzaWNhbCBwaWxsYXIgaWNvbiAtLT4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDwhLS0gVG9wIGNhcGl0YWwgLS0+CiAgICA8bGluZSB4MT0iMjAiIHkxPSIxNCIgeDI9IjQ0IiB5Mj0iMTQiLz4KICAgIDxsaW5lIHgxPSIyMiIgeTE9IjE4IiB4Mj0iNDIiIHkyPSIxOCIvPgogICAgPCEtLSBQaWxsYXIgc2hhZnQgLS0+CiAgICA8bGluZSB4MT0iMjUiIHkxPSIxOCIgeDI9IjI1IiB5Mj0iMzgiLz4KICAgIDxsaW5lIHgxPSIzMiIgeTE9IjE4IiB4Mj0iMzIiIHkyPSIzOCIvPgogICAgPGxpbmUgeDE9IjM5IiB5MT0iMTgiIHgyPSIzOSIgeTI9IjM4Ii8+CiAgICA8IS0tIEJhc2UgLS0+CiAgICA8bGluZSB4MT0iMjIiIHkxPSIzOCIgeDI9IjQyIiB5Mj0iMzgiLz4KICAgIDxsaW5lIHgxPSIyMCIgeTE9IjQyIiB4Mj0iNDQiIHkyPSI0MiIvPgogIDwvZz4KCiAgPHRleHQgeD0iMzIiIHk9IjU2IiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCAtYXBwbGUtc3lzdGVtLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjYiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlRSQURJVElPTjwvdGV4dD4KPC9zdmc+Cg==',
+            'unconstrained': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFVuY29uc3RyYWluZWQgSHVtYW4gTmF0dXJlIC0gUmlzaW5nIHN1bi9wb3RlbnRpYWwgaWNvbiAtLT4KICA8cmVjdCB4PSIyIiB5PSIyIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSI4IiByeT0iOCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0MiIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjZTY5NTAwIi8+CiAgPHJlY3QgeD0iNSIgeT0iNDciIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMiIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjMWExYTFhIi8+CiAgPHJlY3QgeD0iNSIgeT0iNTUiIHdpZHRoPSI1NCIgaGVpZ2h0PSI0IiByeD0iMCIgcnk9IjUiIGZpbGw9IiMxYTFhMWEiLz4KCiAgPCEtLSBSaXNpbmcgc3VuIC8gdW5saW1pdGVkIHBvdGVudGlhbCBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFhMWExYSIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8IS0tIEhvcml6b24gbGluZSAtLT4KICAgIDxsaW5lIHgxPSIxMiIgeTE9IjM0IiB4Mj0iNTIiIHkyPSIzNCIvPgogICAgPCEtLSBTdW4gcmlzaW5nIC0tPgogICAgPHBhdGggZD0iTTIwIDM0IFEzMiAxNiA0NCAzNCIgZmlsbD0iIzFhMWExYSIgZmlsbC1vcGFjaXR5PSIwLjIiLz4KICAgIDwhLS0gU3VuIHJheXMgZ29pbmcgdXB3YXJkIC0tPgogICAgPGxpbmUgeDE9IjMyIiB5MT0iMTAiIHgyPSIzMiIgeTI9IjE4Ii8+CiAgICA8bGluZSB4MT0iMjAiIHkxPSIxNCIgeDI9IjI0IiB5Mj0iMjAiLz4KICAgIDxsaW5lIHgxPSI0NCIgeTE9IjE0IiB4Mj0iNDAiIHkyPSIyMCIvPgogICAgPGxpbmUgeDE9IjE0IiB5MT0iMjQiIHgyPSIyMCIgeTI9IjI2Ii8+CiAgICA8bGluZSB4MT0iNTAiIHkxPSIyNCIgeDI9IjQ0IiB5Mj0iMjYiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI2IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjZjVmNWY1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5VTkJPVU5EPC90ZXh0Pgo8L3N2Zz4K',
+            'universal': 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8IS0tIFVuaXZlcnNhbCBXZWxmYXJlIC0gT3BlbiBhcm1zL2FsbCB3ZWxjb21lIGljb24gLS0+CiAgPHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgcnk9IjgiIGZpbGw9IiMxYTFhMWEiLz4KICA8cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iNTQiIGhlaWdodD0iNDIiIHJ4PSI1IiByeT0iNSIgZmlsbD0iI2Q4MWI2MCIvPgogIDxyZWN0IHg9IjUiIHk9IjQ3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTIiIHJ4PSIwIiByeT0iMCIgZmlsbD0iIzFhMWExYSIvPgogIDxyZWN0IHg9IjUiIHk9IjU1IiB3aWR0aD0iNTQiIGhlaWdodD0iNCIgcng9IjAiIHJ5PSI1IiBmaWxsPSIjMWExYTFhIi8+CgogIDwhLS0gQWxsL2V2ZXJ5b25lIGNpcmNsZSBpY29uIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8IS0tIEVuY29tcGFzc2luZyBjaXJjbGUgLS0+CiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjI2IiByPSIxNiIvPgogICAgPCEtLSBUaHJlZSBmaWd1cmVzIGluc2lkZSByZXByZXNlbnRpbmcgImFsbCIgLS0+CiAgICA8Y2lyY2xlIGN4PSIyNCIgY3k9IjIyIiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8bGluZSB4MT0iMjQiIHkxPSIyNSIgeDI9IjI0IiB5Mj0iMzQiLz4KCiAgICA8Y2lyY2xlIGN4PSIzMiIgY3k9IjIwIiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8bGluZSB4MT0iMzIiIHkxPSIyMyIgeDI9IjMyIiB5Mj0iMzQiLz4KCiAgICA8Y2lyY2xlIGN4PSI0MCIgY3k9IjIyIiByPSIzIiBmaWxsPSIjZmZmZmZmIi8+CiAgICA8bGluZSB4MT0iNDAiIHkxPSIyNSIgeDI9IjQwIiB5Mj0iMzQiLz4KICA8L2c+CgogIDx0ZXh0IHg9IjMyIiB5PSI1NiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSI1LjUiIGZvbnQtd2VpZ2h0PSI2MDAiIGZpbGw9IiNmNWY1ZjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlVOSVZFUlNBTDwvdGV4dD4KPC9zdmc+Cg==',
+        };
+
+        // Load icons from embedded data
+        function loadIcon(name) {
+            return new Promise((resolve) => {
+                if (!iconData[name]) {
+                    resolve(null);
+                    return;
+                }
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = iconData[name];
+            });
+        }
+
+
+        // Preload all icons (non-blocking - continue even if some fail)
+        const iconNames = [
+            'equality', 'market', 'liberty', 'authority', 'progress', 'tradition',
+            'globe', 'nation', 'populist', 'elite', 'hawk', 'dove',
+            'eco', 'anthropo', 'decentral', 'central', 'revolutionary', 'gradualist',
+            'unconstrained', 'constrained', 'principled', 'pragmatic', 'commons', 'private',
+            'secular', 'religious', 'technophile', 'techskeptic', 'universal', 'targeted',
+            'pluralist', 'assimilationist'
+        ];
+        const icons = {};
+        try {
+            await Promise.all(iconNames.map(async name => {
+                icons[name] = await loadIcon(name);
+            }));
+        } catch (iconErr) {
+            console.warn('Some icons failed to load:', iconErr);
+        }
+
+        // === DRAW BACKGROUND ===
+        const bgGradient = ctx.createLinearGradient(0, 0, 450, 1600);
+        bgGradient.addColorStop(0, colors.bgStart);
+        bgGradient.addColorStop(1, colors.bgEnd);
+        ctx.fillStyle = bgGradient;
+        ctx.fillRect(0, 0, 900, 1600);
+
+        // Subtle grid pattern overlay
+        ctx.save();
+        ctx.globalAlpha = isDark ? 0.03 : 0.05;
+        ctx.strokeStyle = colors.text;
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 900; i += 30) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i, 1600);
+            ctx.stroke();
+        }
+        for (let i = 0; i < 1600; i += 30) {
+            ctx.beginPath();
+            ctx.moveTo(0, i);
+            ctx.lineTo(900, i);
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // === HEADER SECTION (0-100) ===
+        // Title with gradient text effect
+        ctx.save();
+        ctx.font = "700 44px Montserrat, sans-serif";
+        ctx.textAlign = "center";
+        const titleGradient = ctx.createLinearGradient(250, 0, 650, 0);
+        titleGradient.addColorStop(0, colors.accent);
+        titleGradient.addColorStop(1, colors.accentAlt);
+        ctx.fillStyle = titleGradient;
+        ctx.fillText("Ideology Matrix", 450, 60);
+        ctx.restore();
+
+        // Version badge
+        ctx.save();
+        roundRect(765, 20, 105, 30, 15);
+        ctx.fillStyle = isDark ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)';
+        ctx.fill();
+        ctx.font = "600 13px Montserrat, sans-serif";
+        ctx.fillStyle = colors.accent;
+        ctx.textAlign = "center";
+        ctx.fillText("v2.0", 817, 40);
+        ctx.restore();
+
+        // Decorative line
+        ctx.save();
+        const lineGradient = ctx.createLinearGradient(150, 0, 750, 0);
+        lineGradient.addColorStop(0, 'transparent');
+        lineGradient.addColorStop(0.2, colors.accent);
+        lineGradient.addColorStop(0.8, colors.accentAlt);
+        lineGradient.addColorStop(1, 'transparent');
+        ctx.strokeStyle = lineGradient;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(150, 82);
+        ctx.lineTo(750, 82);
+        ctx.stroke();
+        ctx.restore();
+
+        // === PRIMARY MATCH CARD (100-260) ===
+        drawCard(50, 100, 800, 160, 20);
+
+        // Star icon
+        ctx.save();
+        ctx.font = "28px sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("⭐", 75, 155);
+        ctx.restore();
+
+        // Primary match name
+        ctx.save();
+        ctx.font = "700 36px Montserrat, sans-serif";
+        ctx.fillStyle = colors.text;
+        ctx.textAlign = "center";
+        const primaryName = topMatches[0].name;
+        if (primaryName.length > 20) {
+            ctx.font = "700 30px Montserrat, sans-serif";
+        }
+        ctx.fillText(primaryName, 450, 160);
+        ctx.restore();
+
+        // Match percentage with gradient
+        ctx.save();
+        ctx.font = "700 52px Montserrat, sans-serif";
+        const percentGradient = ctx.createLinearGradient(350, 0, 550, 0);
+        percentGradient.addColorStop(0, colors.accent);
+        percentGradient.addColorStop(1, colors.accentAlt);
+        ctx.fillStyle = percentGradient;
+        ctx.textAlign = "center";
+        ctx.fillText(topMatches[0].matchPercent + "%", 450, 230);
+        ctx.restore();
+
+        // "Best Match" label
+        ctx.save();
+        ctx.font = "500 14px Montserrat, sans-serif";
+        ctx.fillStyle = colors.textMuted;
+        ctx.textAlign = "center";
+        ctx.fillText("Best Match", 450, 252);
+        ctx.restore();
+
+        // === RADAR CHART SECTION (280-920) ===
+        const chartCenterX = 450;
+        const chartCenterY = 590;
+        const chartRadius = 240;
+        const numAxes = 16;
+
+        // Draw radar grid
+        ctx.save();
+        ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+        ctx.lineWidth = 1;
+
+        // Grid circles at 25%, 50%, 75%, 100%
+        [0.25, 0.5, 0.75, 1.0].forEach((scale, idx) => {
+            ctx.beginPath();
+            ctx.arc(chartCenterX, chartCenterY, chartRadius * scale, 0, Math.PI * 2);
+            if (scale === 0.5) {
+                // Emphasized 50% line
+                ctx.setLineDash([8, 4]);
+                ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+                ctx.lineWidth = 2;
+            } else {
+                ctx.setLineDash([]);
+                ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+                ctx.lineWidth = 1;
+            }
+            ctx.stroke();
+        });
+        ctx.setLineDash([]);
+        ctx.restore();
+
+        // Draw spoke lines
+        ctx.save();
+        ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < numAxes; i++) {
+            const angle = -Math.PI / 2 + (i * 2 * Math.PI / numAxes);
+            const endX = chartCenterX + chartRadius * Math.cos(angle);
+            const endY = chartCenterY + chartRadius * Math.sin(angle);
+            ctx.beginPath();
+            ctx.moveTo(chartCenterX, chartCenterY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // Calculate user polygon points
+        const userPoints = [];
+        for (let i = 0; i < numAxes; i++) {
+            const axis = axisConfig[i];
+            const score = userScores[axis.key] ?? 50;
+            const angle = -Math.PI / 2 + (i * 2 * Math.PI / numAxes);
+            const r = (score / 100) * chartRadius;
+            userPoints.push({
+                x: chartCenterX + r * Math.cos(angle),
+                y: chartCenterY + r * Math.sin(angle),
+                score: score,
+                color: axis.color
+            });
+        }
+
+        // Draw user polygon fill
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(userPoints[0].x, userPoints[0].y);
+        for (let i = 1; i < userPoints.length; i++) {
+            ctx.lineTo(userPoints[i].x, userPoints[i].y);
+        }
+        ctx.closePath();
+
+        // Gradient fill for polygon
+        const polyGradient = ctx.createRadialGradient(
+            chartCenterX, chartCenterY, 0,
+            chartCenterX, chartCenterY, chartRadius
+        );
+        polyGradient.addColorStop(0, isDark ? 'rgba(99,102,241,0.4)' : 'rgba(99,102,241,0.3)');
+        polyGradient.addColorStop(1, isDark ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.1)');
+        ctx.fillStyle = polyGradient;
+        ctx.fill();
+
+        // Polygon stroke
+        ctx.strokeStyle = colors.accent;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.restore();
+
+        // Draw data points on polygon
+        ctx.save();
+        for (let i = 0; i < userPoints.length; i++) {
+            ctx.beginPath();
+            ctx.arc(userPoints[i].x, userPoints[i].y, 6, 0, Math.PI * 2);
+            ctx.fillStyle = colors.accent;
+            ctx.fill();
+            ctx.strokeStyle = isDark ? '#1a1a2e' : '#f8f9fa';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // Draw icons around the chart (dominant only)
+        const iconRadius = chartRadius + 50;
+        const iconSize = 80;
+
+        for (let i = 0; i < numAxes; i++) {
+            const angle = -Math.PI / 2 + (i * 2 * Math.PI / numAxes);
+            const ix = chartCenterX + iconRadius * Math.cos(angle);
+            const iy = chartCenterY + iconRadius * Math.sin(angle);
+
+            const axis = axisConfig[i];
+            const score = userScores[axis.key] ?? 50;
+
+            // Determine dominant icon (right side is high score, left side is low score)
+            const dominantIcon = score >= 50 ? axis.rightIcon : axis.leftIcon;
+
+            // Draw dominant icon
+            if (icons[dominantIcon]) {
+                ctx.drawImage(
+                    icons[dominantIcon],
+                    ix - iconSize / 2,
+                    iy - iconSize / 2,
+                    iconSize,
+                    iconSize
+                );
+            }
+        }
+
+        // === OTHER MATCHES SECTION (940-1100) ===
+        // 2nd and 3rd place cards side by side
+        if (topMatches.length >= 3) {
+            // 2nd place card
+            drawCard(50, 940, 385, 140, 16);
+            ctx.save();
+            ctx.font = "600 16px Montserrat, sans-serif";
+            ctx.fillStyle = colors.textMuted;
+            ctx.textAlign = "center";
+            ctx.fillText("2nd", 242, 972);
+
+            ctx.font = "700 24px Montserrat, sans-serif";
+            ctx.fillStyle = colors.text;
+            const name2 = topMatches[1].name;
+            if (name2.length > 16) {
+                ctx.font = "700 20px Montserrat, sans-serif";
+            }
+            ctx.fillText(name2, 242, 1010);
+
+            ctx.font = "700 32px Montserrat, sans-serif";
+            ctx.fillStyle = colors.accent;
+            ctx.fillText(topMatches[1].matchPercent + "%", 242, 1058);
+            ctx.restore();
+
+            // 3rd place card
+            drawCard(465, 940, 385, 140, 16);
+            ctx.save();
+            ctx.font = "600 16px Montserrat, sans-serif";
+            ctx.fillStyle = colors.textMuted;
+            ctx.textAlign = "center";
+            ctx.fillText("3rd", 657, 972);
+
+            ctx.font = "700 24px Montserrat, sans-serif";
+            ctx.fillStyle = colors.text;
+            const name3 = topMatches[2].name;
+            if (name3.length > 16) {
+                ctx.font = "700 20px Montserrat, sans-serif";
+            }
+            ctx.fillText(name3, 657, 1010);
+
+            ctx.font = "700 32px Montserrat, sans-serif";
+            ctx.fillStyle = colors.accent;
+            ctx.fillText(topMatches[2].matchPercent + "%", 657, 1058);
+            ctx.restore();
+        }
+
+        // === MECHANISM TAGS SECTION (1100-1180) ===
+        let footerStartY = 1100; // Default if no mechanisms
+        if (mechanisms && mechanisms.length > 0) {
+            const uniqueMechs = [...new Set(mechanisms)].slice(0, 5);
+            const tagHeight = 32;
+            const tagPadding = 16;
+            const tagGap = 10;
+
+            // Calculate tag widths
+            ctx.font = "600 14px Montserrat, sans-serif";
+            const tagWidths = uniqueMechs.map(mech => {
+                const label = mechanismLabels[mech] || mech.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                return ctx.measureText(label).width + tagPadding * 2;
+            });
+
+            // Center the tags
+            const totalWidth = tagWidths.reduce((a, b) => a + b, 0) + (tagWidths.length - 1) * tagGap;
+            let tagX = (900 - totalWidth) / 2;
+            const tagY = 1130;
+
+            // Section label
+            ctx.save();
+            ctx.font = "500 14px Montserrat, sans-serif";
+            ctx.fillStyle = colors.textMuted;
+            ctx.textAlign = "center";
+            ctx.fillText("Your Approach", 450, 1110);
+            ctx.restore();
+
+            // Draw tags
+            uniqueMechs.forEach((mech, idx) => {
+                const label = mechanismLabels[mech] || mech.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                const w = tagWidths[idx];
+
+                // Tag background with gradient
+                ctx.save();
+                roundRect(tagX, tagY, w, tagHeight, tagHeight / 2);
+                const tagGradient = ctx.createLinearGradient(tagX, tagY, tagX + w, tagY + tagHeight);
+                tagGradient.addColorStop(0, isDark ? 'rgba(99,102,241,0.25)' : 'rgba(99,102,241,0.15)');
+                tagGradient.addColorStop(1, isDark ? 'rgba(139,92,246,0.25)' : 'rgba(139,92,246,0.15)');
+                ctx.fillStyle = tagGradient;
+                ctx.fill();
+
+                // Tag border
+                ctx.strokeStyle = isDark ? 'rgba(99,102,241,0.4)' : 'rgba(99,102,241,0.3)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.restore();
+
+                // Tag text
+                ctx.save();
+                ctx.font = "600 13px Montserrat, sans-serif";
+                ctx.fillStyle = isDark ? '#c4b5fd' : '#6366f1';
+                ctx.textAlign = "center";
+                ctx.fillText(label, tagX + w / 2, tagY + 21);
+                ctx.restore();
+
+                tagX += w + tagGap;
+            });
+            footerStartY = 1200;
+        }
+
+        // === FOOTER SECTION ===
+        // Decorative line
+        ctx.save();
+        const footerLineGrad = ctx.createLinearGradient(150, 0, 750, 0);
+        footerLineGrad.addColorStop(0, 'transparent');
+        footerLineGrad.addColorStop(0.3, isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)');
+        footerLineGrad.addColorStop(0.7, isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)');
+        footerLineGrad.addColorStop(1, 'transparent');
+        ctx.strokeStyle = footerLineGrad;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(150, footerStartY);
+        ctx.lineTo(750, footerStartY);
+        ctx.stroke();
+        ctx.restore();
+
+        // URL/branding
+        ctx.save();
+        ctx.font = "500 22px Montserrat, sans-serif";
+        ctx.fillStyle = colors.textMuted;
+        ctx.textAlign = "center";
+        ctx.fillText("ideologymatrix.org", 450, footerStartY + 100);
+        ctx.restore();
+
+        // Tagline
+        ctx.save();
+        ctx.font = "400 14px Montserrat, sans-serif";
+        ctx.fillStyle = isDark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+        ctx.textAlign = "center";
+        ctx.fillText("Discover where you stand on 16 political dimensions", 450, footerStartY + 140);
+        ctx.restore();
+
+        // Small credit
+        ctx.save();
+        ctx.font = "400 12px Montserrat, sans-serif";
+        ctx.fillStyle = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.2)';
+        ctx.textAlign = "center";
+        ctx.fillText("Based on 8values • MIT License", 450, footerStartY + 250);
+        ctx.restore();
 
         document.getElementById("banner").src = c.toDataURL();
+        } catch (err) {
+            console.error('Error generating share image:', err);
+        }
     }
-    </script>
+
+    // Run image generation - handle both cases:
+    // 1. Page still loading: wait for load event
+    // 2. Page already loaded: run immediately
+    if (document.readyState === 'complete') {
+        generateShareImage();
+    } else {
+        window.addEventListener('load', generateShareImage);
+    }
+</script>
 </body>
+</html>

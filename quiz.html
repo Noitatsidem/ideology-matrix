@@ -1,115 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:400,700" rel="stylesheet">
 <link href='style.css' rel='stylesheet' type='text/css'>
-<title>8values Quiz</title>
-<link rel="icon" type="x-icon" href="icon.png">
-<link rel="shortcut icon" type="x-icon" href="icon.png">
+<title>Ideology Matrix Quiz</title>
+<link rel="icon" type="image/x-icon" href="icon.png">
+<link rel="shortcut icon" type="image/x-icon" href="icon.png">
 <meta charset="utf-8">
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-  (adsbygoogle = window.adsbygoogle || []).push({
-    google_ad_client: "ca-pub-6511426299019766",
-    enable_page_level_ads: true
-  });
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="theme.js"></script>
 </head>
 <body>
-<script type="application/javascript"
-        src="questions.js">
-</script>
-<h1>8values</h1>
+<a href="#question-text" class="skip-link">Skip to quiz question</a>
+<script type="application/javascript" src="questions.js"></script>
+<script type="application/javascript" src="mechanism-questions.js"></script>
+<script type="application/javascript" src="ideologies.js"></script>
+<script type="application/javascript" src="adaptive.js"></script>
+
+<h1>Ideology Matrix</h1>
 <hr>
-<h2 style="text-align:center;" id="question-number">Loading...</h2>
-<p class="question" id="question-text"></p>
-<button class="button stronglyAgree" onclick="next_question( 1.0)">Strongly Agree</button> <br>
-<button class="button agree" onclick="next_question( 0.5)">Agree</button> <br>
-<button class="button neutral" onclick="next_question( 0.0)">Neutral/Unsure</button> <br>
-<button class="button disagree" onclick="next_question(-0.5)">Disagree</button> <br>
-<button class="button stronglyDisagree" onclick="next_question(-1.0)">Strongly Disagree</button> <br>
-<button class="small_button" onclick="prev_question()" id="back_button">Back</button>
-<button class="small_button_off" id="back_button_off">Back</button><br>
 
-<!-- Website visit statistics - no personal information is collected! -->
-<script type="text/javascript">
-var sc_project=11325211;
-var sc_invisible=1;
-var sc_security="fd9f0659";
-var scJsHost = (("https:" == document.location.protocol) ?
-"https://secure." : "http://www.");
-document.write("<sc"+"ript type='text/javascript' src='" +
-scJsHost+
-"statcounter.com/counter/counter.js'></"+"script>");
-</script>
-<noscript><div class="statcounter"><a title="web stats"
-href="http://statcounter.com/" target="_blank"><img
-class="statcounter"
-src="//c.statcounter.com/11325211/0/fd9f0659/1/" alt="web
-stats"></a></div></noscript>
+<!-- Confirmation Dialog (replaces native confirm for accessibility) -->
+<div id="confirm-dialog" class="resume-overlay" style="display: none;" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <div class="resume-dialog">
+        <h2 id="confirm-title">Start Over?</h2>
+        <p id="confirm-message">Are you sure you want to start over? All your progress will be lost.</p>
+        <button class="button stronglyDisagree" onclick="confirmDialogYes()" onkeydown="handleConfirmYesKeydown(event)" id="confirm-yes-btn">Yes, Start Over</button>
+        <br>
+        <button class="button neutral" onclick="confirmDialogNo()" onkeydown="handleConfirmNoKeydown(event)" id="confirm-no-btn">Cancel</button>
+    </div>
+</div>
 
-<!-- JavaScript for the test itself -->
+<!-- Resume Dialog -->
+<div id="resume-dialog" class="resume-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="resume-title">
+    <div class="resume-dialog">
+        <h2 id="resume-title">Welcome Back!</h2>
+        <p>You have saved progress from a previous session.</p>
+        <div class="progress-info" id="saved-progress-info" aria-live="polite"></div>
+        <button class="button" onclick="resumeProgress()" onkeydown="handleResumeKeydown(event)" aria-label="Continue quiz from where you left off">Continue Where I Left Off</button>
+        <br>
+        <button class="button neutral" onclick="startFresh()" onkeydown="handleStartFreshDialogKeydown(event)" aria-label="Discard progress and start a new quiz">Start Fresh</button>
+    </div>
+</div>
+
+<!-- Main Quiz Section -->
+<div id="main-quiz" role="main" aria-label="Quiz questions">
+    <!-- Phase Indicator -->
+    <div class="phase-indicator">
+        <div class="phase-badges">
+            <span class="phase-badge active" id="phase1-badge">1. Core Questions</span>
+            <span class="phase-badge" id="phase2-badge">2. Refining</span>
+            <span class="phase-badge" id="phase3-badge">3. Your Approach</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <p class="estimated-remaining" id="estimated-remaining"></p>
+    </div>
+
+    <h2 style="text-align:center;" id="question-number" aria-live="polite">Loading...</h2>
+    <p class="question" id="question-text" role="status" aria-live="polite" aria-atomic="true"></p>
+
+    <!-- Standard agree/disagree buttons -->
+    <div id="standard-options" role="group" aria-label="Response options">
+        <button class="button stronglyAgree" onclick="answerQuestion(1.0)" onkeydown="handleButtonKeydown(event, 1.0)" aria-label="Strongly Agree with this statement">Strongly Agree</button> <br>
+        <button class="button agree" onclick="answerQuestion(0.5)" onkeydown="handleButtonKeydown(event, 0.5)" aria-label="Agree with this statement">Agree</button> <br>
+        <button class="button neutral" onclick="answerQuestion(0.0)" onkeydown="handleButtonKeydown(event, 0.0)" aria-label="Neutral or unsure about this statement">Neutral/Unsure</button> <br>
+        <button class="button disagree" onclick="answerQuestion(-0.5)" onkeydown="handleButtonKeydown(event, -0.5)" aria-label="Disagree with this statement">Disagree</button> <br>
+        <button class="button stronglyDisagree" onclick="answerQuestion(-1.0)" onkeydown="handleButtonKeydown(event, -1.0)" aria-label="Strongly Disagree with this statement">Strongly Disagree</button> <br>
+    </div>
+
+    <!-- Mechanism question options (hidden by default) -->
+    <div id="mechanism-options" class="mechanism-options" style="display: none;" role="group" aria-label="Response options">
+    </div>
+
+    <button class="small-button" onclick="goBack()" onkeydown="handleBackKeydown(event)" id="back_button" aria-label="Go back to previous question">Back</button>
+    <button class="small-button-off" id="back_button_off" disabled aria-disabled="true" aria-label="Cannot go back, this is the first question">Back</button><br>
+    <button class="start-fresh-btn" onclick="confirmStartFresh()" onkeydown="handleStartFreshKeydown(event)" aria-label="Start over and discard all progress">Start Over</button>
+</div>
+
+<!-- Phase Transition Screen -->
+<div id="transition-screen" style="display: none;">
+    <div class="transition-screen">
+        <h2 id="transition-title">Phase Complete!</h2>
+        <p id="transition-message"></p>
+
+        <div class="top-matches-preview" role="region" aria-label="Your preliminary ideology matches">
+            <h3>Your Top Matches So Far:</h3>
+            <ol id="preliminary-matches" aria-label="List of top matching ideologies"></ol>
+        </div>
+
+        <p id="transition-detail"></p>
+        <div id="targeted-axes" role="list" aria-label="Targeted axes"></div>
+
+        <br><br>
+        <button class="button" onclick="continueToNextPhase()" onkeydown="handleContinueKeydown(event)" aria-label="Continue to next phase">Continue</button>
+    </div>
+</div>
+
 <script>
-    var max_econ, max_dipl, max_govt, max_scty; // Max possible scores
-    max_econ = max_dipl = max_govt = max_scty = 0;
-    let econ_array = new Array(questions.length);
-    let dipl_array = new Array(questions.length);
-    let govt_array = new Array(questions.length);
-    let scty_array = new Array(questions.length);
-    var qn = 0; // Question number
-    init_question();
-    for (var i = 0; i < questions.length; i++) {
-        max_econ += Math.abs(questions[i].effect.econ)
-        max_dipl += Math.abs(questions[i].effect.dipl)
-        max_govt += Math.abs(questions[i].effect.govt)
-        max_scty += Math.abs(questions[i].effect.scty)
-    }
-    function init_question() {
-        document.getElementById("question-text").innerHTML = questions[qn].question;
-        document.getElementById("question-number").innerHTML = "Question " + (qn + 1) + " of " + (questions.length);
-        if (qn == 0) {
-            document.getElementById("back_button").style.display = 'none';
-            document.getElementById("back_button_off").style.display = 'block';
-        } else {
-            document.getElementById("back_button").style.display = 'block';
-            document.getElementById("back_button_off").style.display = 'none';
-        }
+    /*
+     * Ideology Matrix - Adaptive Three-Phase Quiz Engine
+     * Phase 1: Core Screening (25-35 questions)
+     * Phase 2: Adaptive Discrimination (15-25 questions)
+     * Phase 3: Mechanism Questions (10-15 questions)
+     */
 
-    }
-
-    function next_question(mult) {
-        econ_array[qn] = mult*questions[qn].effect.econ
-        dipl_array[qn] = mult*questions[qn].effect.dipl
-        govt_array[qn] = mult*questions[qn].effect.govt
-        scty_array[qn] = mult*questions[qn].effect.scty
-        qn++;
-        if (qn < questions.length) {
-            init_question();
-        } else {
-            results();
+    // ==================== KEYBOARD HANDLERS ====================
+    // Handle Enter/Space for answer buttons (WCAG 2.1.1 Keyboard)
+    function handleButtonKeydown(event, value) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            answerQuestion(value);
         }
     }
 
-    function prev_question() {
-        if (qn == 0) {
+    function handleBackKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            goBack();
+        }
+    }
+
+    function handleStartFreshKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            confirmStartFresh();
+        }
+    }
+
+    function handleResumeKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            resumeProgress();
+        }
+    }
+
+    function handleStartFreshDialogKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            startFresh();
+        }
+    }
+
+    function handleContinueKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            continueToNextPhase();
+        }
+    }
+
+    // Handle keyboard for mechanism option buttons
+    function handleMechanismKeydown(event, value) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            answerQuestion(value);
+        }
+    }
+
+    // Confirmation dialog handlers
+    function handleConfirmYesKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            confirmDialogYes();
+        }
+    }
+
+    function handleConfirmNoKeydown(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            confirmDialogNo();
+        }
+    }
+
+    // ==================== STATE ====================
+    let adaptiveState = null;
+    let currentQuestion = null;
+    let questionHistory = []; // For back button
+    let pendingTransition = null;
+
+    const STORAGE_KEY = 'ideology-matrix-adaptive-progress';
+
+    const PHASE_LABELS = {
+        1: 'Core Questions',
+        2: 'Refining Your Position',
+        3: 'Your Approach'
+    };
+
+    const AXIS_LABELS = {
+        'eqlt': 'Equality', 'lbrt': 'Liberty', 'prog': 'Progress', 'idnt': 'Identity',
+        'popl': 'Populism', 'intv': 'Intervention', 'ecol': 'Ecology', 'powr': 'Power',
+        'chng': 'Change', 'hmnn': 'Human Nature', 'mns': 'Means', 'prty': 'Property',
+        'scr': 'Secularism', 'tech': 'Technology', 'wlfr': 'Welfare', 'intg': 'Integration'
+    };
+
+    // ==================== PROGRESS SAVING ====================
+    function saveProgress() {
+        try {
+            const saveData = {
+                adaptiveState: {
+                    phase: adaptiveState.phase,
+                    answeredIds: Array.from(adaptiveState.answeredIds),
+                    axisResponses: adaptiveState.axisResponses,
+                    axisConfidence: adaptiveState.axisConfidence,
+                    axisScores: adaptiveState.axisScores,
+                    axisMaxes: adaptiveState.axisMaxes,
+                    fullAxisMaxes: adaptiveState.fullAxisMaxes,  // Critical fix #3
+                    userScores: adaptiveState.userScores,
+                    topIdeologies: adaptiveState.topIdeologies,
+                    targetedAxes: adaptiveState.targetedAxes,
+                    axisVariances: adaptiveState.axisVariances,
+                    mechanismTags: adaptiveState.mechanismTags,
+                    tagConflicts: adaptiveState.tagConflicts || [],  // High fix #9
+                    phase1EndCount: adaptiveState.phase1EndCount,
+                    phase2EndCount: adaptiveState.phase2EndCount
+                },
+                questionHistory: questionHistory.map(h => ({
+                    questionId: h.question.id,
+                    response: h.response,
+                    isMechanism: h.question.type === 'mechanism'
+                })),
+                timestamp: Date.now()
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+        } catch (e) {
+            console.warn('Could not save progress:', e);
+        }
+    }
+
+    function loadSavedProgress() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                return JSON.parse(saved);
+            }
+        } catch (e) {
+            console.warn('Could not load saved progress:', e);
+        }
+        return null;
+    }
+
+    function clearSavedProgress() {
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+        } catch (e) {
+            console.warn('Could not clear saved progress:', e);
+        }
+    }
+
+    function restoreState(savedData) {
+        adaptiveState = Adaptive.createState();
+        Adaptive.initializeScores(adaptiveState);
+        Adaptive.calculateMaxScores(questions, adaptiveState);
+
+        // Rebuild question history with snapshots for back button support
+        questionHistory = [];
+        (savedData.questionHistory || []).forEach(h => {
+            const q = h.isMechanism
+                ? mechanismQuestions.find(mq => mq.id === h.questionId)
+                : questions.find(q => q.id === h.questionId);
+            if (!q) return;
+
+            questionHistory.push({
+                question: q,
+                response: h.response,
+                stateSnapshot: cloneState(adaptiveState)
+            });
+
+            Adaptive.recordResponse(adaptiveState, q, h.response);
+        });
+
+        // Restore remaining state that isn't derived from responses
+        adaptiveState.phase = savedData.adaptiveState.phase;
+        adaptiveState.topIdeologies = savedData.adaptiveState.topIdeologies || [];
+        adaptiveState.targetedAxes = savedData.adaptiveState.targetedAxes || [];
+        adaptiveState.axisVariances = savedData.adaptiveState.axisVariances || {};
+        adaptiveState.phase1EndCount = savedData.adaptiveState.phase1EndCount || 0;
+        adaptiveState.phase2EndCount = savedData.adaptiveState.phase2EndCount || 0;
+    }
+
+    function showResumeDialog(savedData) {
+        const answeredCount = savedData.adaptiveState.answeredIds.length;
+        const phase = savedData.adaptiveState.phase;
+        document.getElementById('saved-progress-info').textContent =
+            `${answeredCount} questions answered (Phase ${phase}: ${PHASE_LABELS[phase]})`;
+        const dialog = document.getElementById('resume-dialog');
+        dialog.style.display = 'flex';
+        document.getElementById('main-quiz').style.display = 'none';
+        // Set up focus trap and move focus to dialog
+        resumeDialogFocusTrapCleanup = trapFocus(dialog);
+        const firstButton = dialog.querySelector('button');
+        if (firstButton) firstButton.focus();
+        // Add escape key to dismiss (start fresh)
+        document.addEventListener('keydown', handleResumeDialogEscape);
+    }
+
+    function handleResumeDialogEscape(event) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            startFresh();
+        }
+    }
+
+    function hideResumeDialog() {
+        const dialog = document.getElementById('resume-dialog');
+        dialog.style.display = 'none';
+        if (resumeDialogFocusTrapCleanup) {
+            resumeDialogFocusTrapCleanup();
+            resumeDialogFocusTrapCleanup = null;
+        }
+        document.removeEventListener('keydown', handleResumeDialogEscape);
+    }
+
+    function resumeProgress() {
+        hideResumeDialog();
+        document.getElementById('main-quiz').style.display = 'block';
+        showNextQuestion();
+    }
+
+    function startFresh() {
+        clearSavedProgress();
+        initializeQuiz();
+        hideResumeDialog();
+        document.getElementById('main-quiz').style.display = 'block';
+        showNextQuestion();
+    }
+
+    // Track element that triggered dialog for focus restoration
+    let confirmTriggerElement = null;
+
+    function confirmStartFresh() {
+        confirmTriggerElement = document.activeElement;
+        showConfirmDialog();
+    }
+
+    function showConfirmDialog() {
+        const dialog = document.getElementById('confirm-dialog');
+        dialog.style.display = 'flex';
+        // Set up focus trap
+        confirmDialogFocusTrapCleanup = trapFocus(dialog);
+        // Focus the cancel button by default (safer action)
+        const cancelBtn = document.getElementById('confirm-no-btn');
+        cancelBtn.focus();
+        // Add escape key listener
+        document.addEventListener('keydown', handleConfirmDialogEscape);
+    }
+
+    function hideConfirmDialog() {
+        const dialog = document.getElementById('confirm-dialog');
+        dialog.style.display = 'none';
+        // Clean up focus trap
+        if (confirmDialogFocusTrapCleanup) {
+            confirmDialogFocusTrapCleanup();
+            confirmDialogFocusTrapCleanup = null;
+        }
+        document.removeEventListener('keydown', handleConfirmDialogEscape);
+        // Restore focus to trigger element
+        if (confirmTriggerElement) {
+            confirmTriggerElement.focus();
+            confirmTriggerElement = null;
+        }
+    }
+
+    function handleConfirmDialogEscape(event) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            confirmDialogNo();
+        }
+    }
+
+    function confirmDialogYes() {
+        hideConfirmDialog();
+        startFresh();
+    }
+
+    function confirmDialogNo() {
+        hideConfirmDialog();
+    }
+
+    // ==================== FOCUS MANAGEMENT ====================
+    // Focus trap for modal dialogs (WCAG 2.1.2 No Keyboard Trap)
+    function trapFocus(dialogElement) {
+        const focusableElements = dialogElement.querySelectorAll(
+            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
+
+        function handleTabKey(e) {
+            if (e.key !== 'Tab') return;
+
+            if (e.shiftKey) {
+                // Shift + Tab
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                // Tab
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        }
+
+        dialogElement.addEventListener('keydown', handleTabKey);
+        return () => dialogElement.removeEventListener('keydown', handleTabKey);
+    }
+
+    // Store cleanup functions for focus traps
+    let resumeDialogFocusTrapCleanup = null;
+    let confirmDialogFocusTrapCleanup = null;
+    let transitionFocusTrapCleanup = null;
+
+    // ==================== QUIZ INITIALIZATION ====================
+    function initializeQuiz() {
+        adaptiveState = Adaptive.createState();
+        Adaptive.initializeScores(adaptiveState);
+        Adaptive.calculateMaxScores(questions, adaptiveState);
+        questionHistory = [];
+        currentQuestion = null;
+        pendingTransition = null;
+    }
+
+    // ==================== UI UPDATES ====================
+    function updatePhaseIndicator() {
+        const phase = adaptiveState.phase;
+
+        // Update phase badges
+        ['phase1-badge', 'phase2-badge', 'phase3-badge'].forEach((id, idx) => {
+            const badge = document.getElementById(id);
+            badge.classList.remove('active', 'completed');
+            if (idx + 1 < phase) {
+                badge.classList.add('completed');
+            } else if (idx + 1 === phase) {
+                badge.classList.add('active');
+            }
+        });
+
+        // Update progress bar (pass ideologies for confidence-based estimation)
+        const progress = Adaptive.getProgress(adaptiveState, ideologies);
+        const percentage = Math.min(100, (progress.answered / progress.estimated) * 100);
+        document.getElementById('progress-fill').style.width = percentage + '%';
+
+        // Update estimated remaining
+        const remaining = Math.max(0, progress.estimated - progress.answered);
+        document.getElementById('estimated-remaining').textContent =
+            `~${remaining} questions remaining`;
+    }
+
+    function showQuestion(question) {
+        currentQuestion = question;
+        document.getElementById('question-text').textContent = question.question;
+
+        const answered = adaptiveState.answeredIds.size;
+        const phaseLabel = PHASE_LABELS[adaptiveState.phase] || 'Question';
+        document.getElementById('question-number').textContent =
+            `${phaseLabel} - Question ${answered + 1}`;
+
+        // Show appropriate options
+        if (question.type === 'mechanism' && question.options) {
+            showMechanismOptions(question);
+        } else {
+            showStandardOptions();
+        }
+
+        // Update back button
+        if (questionHistory.length === 0) {
+            document.getElementById('back_button').style.display = 'none';
+            document.getElementById('back_button_off').style.display = 'block';
+        } else {
+            document.getElementById('back_button').style.display = 'block';
+            document.getElementById('back_button_off').style.display = 'none';
+        }
+
+        updatePhaseIndicator();
+    }
+
+    function showStandardOptions() {
+        document.getElementById('standard-options').style.display = 'block';
+        document.getElementById('mechanism-options').style.display = 'none';
+    }
+
+    function showMechanismOptions(question) {
+        document.getElementById('standard-options').style.display = 'none';
+        const container = document.getElementById('mechanism-options');
+        container.style.display = 'flex';
+        container.innerHTML = '';
+        container.setAttribute('role', 'radiogroup');
+        container.setAttribute('aria-label', 'Choose your preferred approach');
+
+        const groupName = `mechanism-${question.id}`;
+
+        question.options.forEach((option, idx) => {
+            // Create a wrapper label for semantic structure
+            const wrapper = document.createElement('label');
+            wrapper.className = 'mechanism-option';
+            wrapper.setAttribute('tabindex', '0');
+            wrapper.setAttribute('role', 'radio');
+            wrapper.setAttribute('aria-checked', 'false');
+
+            // Hidden radio input for form semantics
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = groupName;
+            radio.value = option.value;
+            radio.className = 'visually-hidden';
+            radio.id = `${groupName}-${idx}`;
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'mechanism-option-text';
+            textSpan.textContent = option.text;
+
+            wrapper.appendChild(radio);
+            wrapper.appendChild(textSpan);
+
+            // Handle selection
+            const selectOption = () => {
+                // Update aria-checked for all options
+                container.querySelectorAll('.mechanism-option').forEach(opt => {
+                    opt.setAttribute('aria-checked', 'false');
+                    opt.classList.remove('selected');
+                });
+                wrapper.setAttribute('aria-checked', 'true');
+                wrapper.classList.add('selected');
+                radio.checked = true;
+                // Small delay before moving to next question for screen reader feedback
+                setTimeout(() => answerQuestion(option.value), 150);
+            };
+
+            wrapper.onclick = selectOption;
+            wrapper.onkeydown = (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    selectOption();
+                }
+            };
+
+            container.appendChild(wrapper);
+        });
+    }
+
+    // ==================== ANSWER HANDLING ====================
+
+    // Deep clone state for back button restoration
+    function cloneState(state) {
+        return {
+            phase: state.phase,
+            answeredIds: new Set(state.answeredIds),
+            axisScores: { ...state.axisScores },
+            axisMaxes: { ...state.axisMaxes },
+            fullAxisMaxes: { ...state.fullAxisMaxes },
+            axisResponses: Object.fromEntries(
+                Object.entries(state.axisResponses).map(([k, v]) => [k, [...v]])
+            ),
+            axisConfidence: { ...state.axisConfidence },
+            userScores: { ...state.userScores },
+            topIdeologies: [...state.topIdeologies],
+            targetedAxes: [...state.targetedAxes],
+            axisVariances: { ...state.axisVariances },
+            mechanismTags: [...state.mechanismTags],
+            tagConflicts: [...(state.tagConflicts || [])],  // High fix #9: preserve tag conflicts
+            phase1EndCount: state.phase1EndCount,
+            phase2EndCount: state.phase2EndCount,
+            ideologies: state.ideologies  // Critical fix #2: preserve ideologies reference
+        };
+    }
+
+    function answerQuestion(response) {
+        if (!currentQuestion) return;
+
+        // Save state snapshot BEFORE recording response (for back button)
+        questionHistory.push({
+            question: currentQuestion,
+            response: response,
+            stateSnapshot: cloneState(adaptiveState)
+        });
+
+        // Record the response
+        Adaptive.recordResponse(adaptiveState, currentQuestion, response);
+
+        // Check for phase transition
+        const transition = Adaptive.checkPhaseTransition(adaptiveState, ideologies);
+        if (transition.transition) {
+            if (transition.to === 'complete') {
+                goToResults();
+                return;
+            }
+            // Save progress before showing transition screen (Critical fix #1)
+            saveProgress();
+            // Show transition screen
+            showTransitionScreen(transition);
             return;
         }
-        qn--;
-        init_question();
+
+        // Save progress and show next question
+        saveProgress();
+        showNextQuestion();
     }
 
-    function calc_score(score,max) {
-        return (100*(max+score)/(2*max)).toFixed(1)
+    function showNextQuestion() {
+        // Check if quiz is complete
+        if (Adaptive.isComplete(adaptiveState)) {
+            goToResults();
+            return;
+        }
+
+        // Get next question based on current phase
+        const allQuestions = adaptiveState.phase === 3
+            ? mechanismQuestions
+            : questions;
+
+        const nextQ = Adaptive.getNextQuestion(
+            adaptiveState,
+            questions,
+            mechanismQuestions,
+            ideologies
+        );
+
+        if (!nextQ) {
+            // No more questions available, go to results
+            goToResults();
+            return;
+        }
+
+        showQuestion(nextQ);
     }
 
-    function results() {
-        let final_econ = econ_array.reduce((a, b) => a + b, 0)
-        let final_dipl = dipl_array.reduce((a, b) => a + b, 0)
-        let final_govt = govt_array.reduce((a, b) => a + b, 0)
-        let final_scty = scty_array.reduce((a, b) => a + b, 0)
-        location.href = `results.html`
-            + `?e=${calc_score(final_econ,max_econ)}`
-            + `&d=${calc_score(final_dipl,max_dipl)}`
-            + `&g=${calc_score(final_govt,max_govt)}`
-            + `&s=${calc_score(final_scty,max_scty)}`
+    function goBack() {
+        if (questionHistory.length === 0) return;
+
+        const lastEntry = questionHistory.pop();
+
+        // Clear any pending transition to prevent inconsistent phase state (Critical fix #7)
+        if (pendingTransition) {
+            pendingTransition = null;
+        }
+
+        // Restore full state snapshot from before this question was answered
+        const snapshot = lastEntry.stateSnapshot;
+        adaptiveState.phase = snapshot.phase;
+        adaptiveState.answeredIds = snapshot.answeredIds;
+        adaptiveState.axisScores = snapshot.axisScores;
+        adaptiveState.axisMaxes = snapshot.axisMaxes;
+        adaptiveState.fullAxisMaxes = snapshot.fullAxisMaxes;
+        adaptiveState.axisResponses = snapshot.axisResponses;
+        adaptiveState.axisConfidence = snapshot.axisConfidence;
+        adaptiveState.userScores = snapshot.userScores;
+        adaptiveState.topIdeologies = snapshot.topIdeologies;
+        adaptiveState.targetedAxes = snapshot.targetedAxes;
+        adaptiveState.axisVariances = snapshot.axisVariances;
+        adaptiveState.mechanismTags = snapshot.mechanismTags;
+        adaptiveState.tagConflicts = snapshot.tagConflicts;  // High fix #9: restore tag conflicts
+        adaptiveState.phase1EndCount = snapshot.phase1EndCount;
+        adaptiveState.phase2EndCount = snapshot.phase2EndCount;
+        adaptiveState.ideologies = snapshot.ideologies;  // Critical fix #2: restore ideologies
+
+        currentQuestion = lastEntry.question;
+        showQuestion(currentQuestion);
+        saveProgress();
     }
+
+    // ==================== PHASE TRANSITIONS ====================
+    function showTransitionScreen(transition) {
+        pendingTransition = transition;
+
+        document.getElementById('main-quiz').style.display = 'none';
+        const transitionScreen = document.getElementById('transition-screen');
+        transitionScreen.style.display = 'block';
+
+        // Set up focus trap
+        transitionFocusTrapCleanup = trapFocus(transitionScreen);
+
+        // Update content based on transition
+        const title = document.getElementById('transition-title');
+        const message = document.getElementById('transition-message');
+        const detail = document.getElementById('transition-detail');
+
+        if (transition.to === 2) {
+            title.textContent = 'Core Questions Complete!';
+            message.innerHTML = `We've established your baseline positions on all major axes.<br>
+                Now we'll ask targeted questions to better distinguish between your closest ideological matches.`;
+            detail.textContent = 'These questions focus on axes where your top matches differ:';
+        } else if (transition.to === 3) {
+            title.textContent = 'Refining Complete!';
+            message.innerHTML = `Your ideological position is becoming clearer.<br>
+                Finally, we'll ask about <strong>how</strong> you'd like to achieve your goals—your preferred approaches and mechanisms.`;
+            detail.textContent = 'These questions help distinguish between similar ideologies with different methods:';
+        }
+
+        // Show preliminary matches
+        const topMatches = Adaptive.getTopMatches(adaptiveState.userScores, ideologies, 5);
+        const matchesList = document.getElementById('preliminary-matches');
+        matchesList.innerHTML = '';
+        topMatches.forEach(ideo => {
+            const li = document.createElement('li');
+            li.textContent = ideo.name;
+            matchesList.appendChild(li);
+        });
+
+        // Show targeted axes
+        const axesDiv = document.getElementById('targeted-axes');
+        axesDiv.innerHTML = '';
+        if (adaptiveState.targetedAxes) {
+            adaptiveState.targetedAxes.forEach(axis => {
+                const badge = document.createElement('span');
+                badge.className = 'axis-badge';
+                badge.textContent = AXIS_LABELS[axis] || axis;
+                axesDiv.appendChild(badge);
+            });
+        }
+
+        // Focus the continue button
+        const continueBtn = transitionScreen.querySelector('button');
+        if (continueBtn) continueBtn.focus();
+    }
+
+    function continueToNextPhase() {
+        const transitionScreen = document.getElementById('transition-screen');
+        transitionScreen.style.display = 'none';
+        // Clean up focus trap
+        if (transitionFocusTrapCleanup) {
+            transitionFocusTrapCleanup();
+            transitionFocusTrapCleanup = null;
+        }
+        document.getElementById('main-quiz').style.display = 'block';
+        pendingTransition = null;
+        updatePhaseIndicator();  // Update estimate before showing next question
+        saveProgress();
+        showNextQuestion();
+    }
+
+    // ==================== RESULTS ====================
+    function goToResults() {
+        clearSavedProgress();
+
+        // Build results URL
+        let url = 'results.html?';
+        const params = [];
+
+        // Add axis scores
+        Adaptive.AXES.forEach(axis => {
+            const score = adaptiveState.userScores[axis] ?? 50;
+            params.push(`${axis}=${score.toFixed(1)}`);
+        });
+
+        // Add metadata
+        params.push(`adaptive=true`);
+        params.push(`totalQuestions=${adaptiveState.answeredIds.size}`);
+
+        // Add mechanism tags if any (with URL size validation)
+        if (adaptiveState.mechanismTags.length > 0) {
+            let mechanismTags = [...adaptiveState.mechanismTags];
+            let mechanismParam = `mechanisms=${mechanismTags.join(',')}`;
+
+            // Check if URL would exceed browser limits (~2KB safe limit)
+            const baseUrlLength = url.length + params.join('&').length;
+            const maxUrlLength = 2000;
+
+            // Truncate mechanism tags if necessary
+            while (mechanismTags.length > 0 && (baseUrlLength + mechanismParam.length + 1) > maxUrlLength) {
+                mechanismTags.pop();
+                mechanismParam = `mechanisms=${mechanismTags.join(',')}`;
+            }
+
+            if (mechanismTags.length > 0) {
+                params.push(mechanismParam);
+            }
+        }
+
+        // Add targeted axes
+        if (adaptiveState.targetedAxes && adaptiveState.targetedAxes.length > 0) {
+            params.push(`targetedAxes=${adaptiveState.targetedAxes.join(',')}`);
+        }
+
+        url += params.join('&');
+        location.href = url;
+    }
+
+    // ==================== INITIALIZATION ====================
+    (function init() {
+        const savedData = loadSavedProgress();
+
+        if (savedData && savedData.adaptiveState) {
+            // Restore saved state
+            restoreState(savedData);
+            showResumeDialog(savedData);
+        } else {
+            // Fresh start
+            initializeQuiz();
+            showNextQuestion();
+        }
+    })();
 </script>
 </body>
+</html>

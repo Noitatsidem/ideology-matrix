@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Assimilationist - Many becoming one/same -->
+  <rect x="2" y="2" width="60" height="60" rx="8" ry="8" fill="#1a1a1a"/>
+  <rect x="5" y="5" width="54" height="42" rx="5" ry="5" fill="#4e342e"/>
+  <rect x="5" y="47" width="54" height="12" rx="0" ry="0" fill="#1a1a1a"/>
+  <rect x="5" y="55" width="54" height="4" rx="0" ry="5" fill="#1a1a1a"/>
+
+  <!-- Different shapes at top becoming same circles at bottom -->
+  <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top row: different shapes -->
+    <polygon points="16,12 20,20 12,20"/>
+    <rect x="28" y="12" width="8" height="8"/>
+    <polygon points="44,12 52,16 44,20 36,16"/>
+
+    <!-- Arrow pointing down -->
+    <line x1="32" y1="24" x2="32" y2="30"/>
+    <path d="M28 27 L32 32 L36 27"/>
+
+    <!-- Bottom row: all same circles -->
+    <circle cx="16" cy="38" r="5"/>
+    <circle cx="32" cy="38" r="5"/>
+    <circle cx="48" cy="38" r="5"/>
+  </g>
+
+  <text x="32" y="56" font-family="system-ui, -apple-system, sans-serif" font-size="5" font-weight="600" fill="#f5f5f5" text-anchor="middle">ASSIMILATE</text>
+</svg>

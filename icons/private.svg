@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Private Property - Lock icon -->
+  <rect x="2" y="2" width="60" height="60" rx="8" ry="8" fill="#1a1a1a"/>
+  <rect x="5" y="5" width="54" height="42" rx="5" ry="5" fill="#1565c0"/>
+  <rect x="5" y="47" width="54" height="12" rx="0" ry="0" fill="#1a1a1a"/>
+  <rect x="5" y="55" width="54" height="4" rx="0" ry="5" fill="#1a1a1a"/>
+
+  <!-- Lock icon -->
+  <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="20" y="24" width="24" height="18" rx="2" fill="#ffffff" fill-opacity="0.25"/>
+    <path d="M24 24 L24 18 Q24 12 32 12 Q40 12 40 18 L40 24"/>
+    <circle cx="32" cy="32" r="3" fill="#ffffff"/>
+  </g>
+
+  <text x="32" y="56" font-family="system-ui, -apple-system, sans-serif" font-size="6" font-weight="600" fill="#f5f5f5" text-anchor="middle">PRIVATE</text>
+</svg>

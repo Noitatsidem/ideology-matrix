@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Populist - Megaphone/voice of people icon -->
+  <rect x="2" y="2" width="60" height="60" rx="8" ry="8" fill="#1a1a1a"/>
+  <rect x="5" y="5" width="54" height="42" rx="5" ry="5" fill="#e91e63"/>
+  <rect x="5" y="47" width="54" height="12" rx="0" ry="0" fill="#1a1a1a"/>
+  <rect x="5" y="55" width="54" height="4" rx="0" ry="5" fill="#1a1a1a"/>
+
+  <!-- Megaphone icon -->
+  <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Megaphone body -->
+    <path d="M14 22 L14 32 L24 36 L24 18 Z" fill="#ffffff" fill-opacity="0.3"/>
+    <!-- Megaphone cone -->
+    <path d="M24 18 L48 12 L48 42 L24 36"/>
+    <!-- Handle -->
+    <line x1="14" y1="32" x2="14" y2="40"/>
+    <!-- Sound waves -->
+    <path d="M52 20 Q56 26 52 32"/>
+  </g>
+
+  <text x="32" y="56" font-family="system-ui, -apple-system, sans-serif" font-size="6" font-weight="600" fill="#f5f5f5" text-anchor="middle">POPULIST</text>
+</svg>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- Economic Equality - Scales/Balance icon -->
+  <rect x="2" y="2" width="60" height="60" rx="8" ry="8" fill="#1a1a1a"/>
+  <rect x="5" y="5" width="54" height="42" rx="5" ry="5" fill="#f44336"/>
+  <rect x="5" y="47" width="54" height="12" rx="0" ry="0" fill="#1a1a1a"/>
+  <rect x="5" y="55" width="54" height="4" rx="0" ry="5" fill="#1a1a1a"/>
+
+  <!-- Balance scales icon -->
+  <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="32" y1="12" x2="32" y2="40"/>
+    <line x1="16" y1="20" x2="48" y2="20"/>
+    <line x1="16" y1="20" x2="16" y2="30"/>
+    <line x1="48" y1="20" x2="48" y2="30"/>
+    <path d="M12 30 Q16 38 20 30"/>
+    <path d="M44 30 Q48 38 52 30"/>
+  </g>
+
+  <text x="32" y="56" font-family="system-ui, -apple-system, sans-serif" font-size="6" font-weight="600" fill="#f5f5f5" text-anchor="middle">EQUALITY</text>
+</svg>
