@@ -860,6 +860,8 @@ div.pluralist .text-wrapper {
 .arrow {
     width: 60%;
     height: auto;
+    color: var(--text-secondary);
+    transition: color var(--transition-normal);
 }
 
 /* ========================================
